@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="96" fill="#1E2A6E" stroke="#D6E4F7" stroke-width="2"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#2E4A9E" stroke-width="1"/>
+
+  <!-- Lion mane (radiating arcs) -->
+  <circle cx="100" cy="98" r="46" fill="#2E4A9E"/>
+
+  <!-- Mane spikes -->
+  <ellipse cx="100" cy="52" rx="8" ry="13" fill="#D6A020" transform="rotate(0 100 98)"/>
+  <ellipse cx="100" cy="52" rx="7" ry="12" fill="#D6A020" transform="rotate(30 100 98)"/>
+  <ellipse cx="100" cy="52" rx="7" ry="12" fill="#D6A020" transform="rotate(-30 100 98)"/>
+  <ellipse cx="100" cy="52" rx="6" ry="11" fill="#C49018" transform="rotate(55 100 98)"/>
+  <ellipse cx="100" cy="52" rx="6" ry="11" fill="#C49018" transform="rotate(-55 100 98)"/>
+  <ellipse cx="100" cy="52" rx="5" ry="10" fill="#B07A10" transform="rotate(75 100 98)"/>
+  <ellipse cx="100" cy="52" rx="5" ry="10" fill="#B07A10" transform="rotate(-75 100 98)"/>
+
+  <!-- Mane circle -->
+  <circle cx="100" cy="98" r="38" fill="#E8A820"/>
+  <circle cx="100" cy="98" r="33" fill="#F5C040"/>
+
+  <!-- Lion face -->
+  <circle cx="100" cy="98" r="28" fill="#F5D070"/>
+
+  <!-- Ears -->
+  <circle cx="75" cy="75" r="10" fill="#F5C040"/>
+  <circle cx="125" cy="75" r="10" fill="#F5C040"/>
+  <circle cx="75" cy="74" r="6" fill="#E8A820"/>
+  <circle cx="125" cy="74" r="6" fill="#E8A820"/>
+
+  <!-- Eyes -->
+  <ellipse cx="91" cy="93" rx="5" ry="5.5" fill="#1E2A6E"/>
+  <ellipse cx="109" cy="93" rx="5" ry="5.5" fill="#1E2A6E"/>
+  <circle cx="92.5" cy="91.5" r="1.5" fill="white"/>
+  <circle cx="110.5" cy="91.5" r="1.5" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="100" cy="103" rx="5" ry="3.5" fill="#C07030"/>
+
+  <!-- Mouth -->
+  <path d="M95 107 Q100 112 105 107" stroke="#C07030" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <line x1="100" y1="106.5" x2="100" y2="108" stroke="#C07030" stroke-width="1.2"/>
+
+  <!-- Whisker dots -->
+  <circle cx="84" cy="103" r="1.2" fill="#C07030" opacity="0.7"/>
+  <circle cx="87" cy="106" r="1.2" fill="#C07030" opacity="0.7"/>
+  <circle cx="116" cy="103" r="1.2" fill="#C07030" opacity="0.7"/>
+  <circle cx="113" cy="106" r="1.2" fill="#C07030" opacity="0.7"/>
+
+  <!-- Bottom text arc (CSC) -->
+  <path id="bottomArc" d="M 30,100 A 70,70 0 0 0 170,100" fill="none"/>
+
+  <!-- Text around bottom -->
+  <text font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#D6E4F7" letter-spacing="2">
+    <textPath href="#bottomArc" startOffset="8%">CRYPTOSTRATEGY CONSULTING</textPath>
+  </text>
+
+  <!-- CSC initials at top -->
+  <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#FFD700" letter-spacing="3">CSC</text>
+</svg>
