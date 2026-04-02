@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useApp } from '../context/AppContext';
-import { getInvestorSummary, getV3Status, formatUSD, formatUSD2, getHFColor, getDaysInfo, hasLowGas } from '../data/investors';
+import { getInvestorSummary, getV3Status, formatUSD, formatUSD2, getHFColor, getDaysInfo, hasLowGas, computeLendingPosition } from '../data/investors';
 import {
   Card, Badge, HFBadge, V3StatusBadge, InvestorStatusBadge,
   Table, Th, Td, SectionHeader, HFGauge, EditableInput
@@ -81,7 +81,7 @@ export default function InvestorDetail() {
       {activeTab === 'resumen' && <TabResumen investor={investor} summary={summary} prices={prices} editing={editing} editData={editData} setEditData={setEditData} />}
       {activeTab === 'v3' && <TabV3 investor={investor} prices={prices} />}
       {activeTab === 'deltas' && <TabDeltas investor={investor} />}
-      {activeTab === 'colateral' && <TabColateral investor={investor} />}
+      {activeTab === 'colateral' && <TabColateral investor={investor} prices={prices} />}
       {activeTab === 'proyecciones' && <TabProyecciones investor={investor} summary={summary} updateInvestor={updateInvestor} />}
     </div>
   );
@@ -347,37 +347,40 @@ function TabDeltas({ investor }) {
   );
 }
 
-function TabColateral({ investor }) {
+function TabColateral({ investor, prices }) {
   return (
     <div className="space-y-4">
       {investor.lending.map((pos, i) => {
-        const totalCol = pos.collateral.reduce((s, c) => s + c.valueUSD, 0);
-        const totalDebt = pos.debt.reduce((s, d) => s + d.valueUSD, 0);
+        const { collateralItems, debtItems, totalCollateral, totalDebt, healthFactor } =
+          computeLendingPosition(pos, prices);
         return (
           <Card key={i} className="p-5">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <div>
                 <h3 className="font-bold text-[#1E2A6E]">{pos.protocol} · {pos.network}</h3>
+                <p className="text-xs text-gray-400 mt-0.5">HF calculado con precios actuales</p>
               </div>
-              <HFGauge hf={pos.healthFactor} />
+              <HFGauge hf={healthFactor} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Colaterales</p>
                 <table className="w-full text-sm">
-                  <thead><tr className="text-xs text-gray-400"><th className="text-left pb-1">Activo</th><th className="text-right pb-1">Cantidad</th><th className="text-right pb-1">Valor USD</th></tr></thead>
+                  <thead><tr className="text-xs text-gray-400"><th className="text-left pb-1">Activo</th><th className="text-right pb-1">Cantidad</th><th className="text-right pb-1">Valor USD</th><th className="text-right pb-1">Liq.%</th></tr></thead>
                   <tbody>
-                    {pos.collateral.map((c, j) => (
+                    {collateralItems.map((c, j) => (
                       <tr key={j} className="border-t border-gray-50">
                         <td className="py-1.5 font-medium text-[#1E2A6E]">{c.asset}</td>
                         <td className="py-1.5 text-right text-gray-600">{c.amount.toLocaleString()}</td>
-                        <td className="py-1.5 text-right font-medium">{formatUSD(c.valueUSD)}</td>
+                        <td className="py-1.5 text-right font-medium">{formatUSD(c.computedValueUSD)}</td>
+                        <td className="py-1.5 text-right text-gray-400 text-xs">{c.liqThreshold ? `${(c.liqThreshold * 100).toFixed(0)}%` : '—'}</td>
                       </tr>
                     ))}
                     <tr className="border-t border-gray-200 font-bold">
                       <td className="py-1.5" colSpan={2}>Total</td>
-                      <td className="py-1.5 text-right text-[#1A5C2A]">{formatUSD(totalCol)}</td>
+                      <td className="py-1.5 text-right text-[#1A5C2A]">{formatUSD(totalCollateral)}</td>
+                      <td />
                     </tr>
                   </tbody>
                 </table>
@@ -387,11 +390,11 @@ function TabColateral({ investor }) {
                 <table className="w-full text-sm">
                   <thead><tr className="text-xs text-gray-400"><th className="text-left pb-1">Activo</th><th className="text-right pb-1">Cantidad</th><th className="text-right pb-1">Valor USD</th></tr></thead>
                   <tbody>
-                    {pos.debt.filter(d => d.amount > 0).map((d, j) => (
+                    {debtItems.filter(d => d.amount > 0).map((d, j) => (
                       <tr key={j} className="border-t border-gray-50">
                         <td className="py-1.5 font-medium text-[#1E2A6E]">{d.asset}</td>
                         <td className="py-1.5 text-right text-gray-600">{d.amount.toLocaleString()}</td>
-                        <td className="py-1.5 text-right font-medium text-[#8B0000]">{formatUSD(d.valueUSD)}</td>
+                        <td className="py-1.5 text-right font-medium text-[#8B0000]">{formatUSD(d.computedValueUSD)}</td>
                       </tr>
                     ))}
                     <tr className="border-t border-gray-200 font-bold">
@@ -406,7 +409,7 @@ function TabColateral({ investor }) {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div className="bg-[#D6F0DC] rounded-lg p-3">
                 <p className="text-xs text-[#1A5C2A] opacity-70">Ratio Col/Deuda</p>
-                <p className="font-bold text-[#1A5C2A]">{(totalCol / (totalDebt || 1)).toFixed(2)}x</p>
+                <p className="font-bold text-[#1A5C2A]">{(totalCollateral / (totalDebt || 1)).toFixed(2)}x</p>
               </div>
               {pos.liquidationPriceETH && (
                 <div className="bg-[#FFE8E8] rounded-lg p-3">
