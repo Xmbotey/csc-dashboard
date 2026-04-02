@@ -30,10 +30,12 @@ export default function Login() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-[#1E2A6E] font-bold text-xl">CSC</span>
-          </div>
-          <h1 className="text-white text-2xl font-bold">CryptoStrategy Consulting</h1>
+          <img
+            src="/logo.png"
+            alt="CryptoStrategy Consulting"
+            className="w-44 h-44 mx-auto mb-4 drop-shadow-2xl rounded-full"
+          />
+          <h1 className="text-white text-2xl font-bold tracking-wide">CryptoStrategy Consulting</h1>
           <p className="text-blue-300 text-sm mt-1">Portfolio Management Dashboard</p>
         </div>
 

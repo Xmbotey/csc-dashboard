@@ -30,15 +30,15 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-4 py-5 border-b border-[#2E4A9E]">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-            <span className="text-[#1E2A6E] font-bold text-sm">CSC</span>
-          </div>
-          <div>
-            <p className="text-white font-bold text-sm leading-tight">CryptoStrategy</p>
-            <p className="text-blue-200 text-xs">Consulting</p>
-          </div>
+      <div className="px-4 py-4 border-b border-[#2E4A9E] flex items-center gap-3">
+        <img
+          src="/logo.png"
+          alt="CSC"
+          className="w-11 h-11 rounded-full flex-shrink-0 shadow-md"
+        />
+        <div>
+          <p className="text-white font-bold text-sm leading-tight">CryptoStrategy</p>
+          <p className="text-blue-200 text-xs">Consulting</p>
         </div>
       </div>
 
@@ -96,9 +96,7 @@ export default function Sidebar() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#1E2A6E] flex items-center justify-between px-4 z-30 shadow-md">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
-            <span className="text-[#1E2A6E] font-bold text-xs">CSC</span>
-          </div>
+          <img src="/logo.png" alt="CSC" className="w-8 h-8 rounded-full shadow" />
           <span className="text-white font-bold text-sm">CryptoStrategy</span>
         </div>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="text-white p-1">
