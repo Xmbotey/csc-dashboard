@@ -101,8 +101,8 @@ export default function V3Positions() {
                   <Badge variant="blue">{pos.network}</Badge>
                 </Td>
                 <Td className="font-medium">{formatUSD(pos.liquidity)}</Td>
-                <Td className="text-gray-600">${pos.rangeMin.toLocaleString()}</Td>
-                <Td className="text-gray-600">${pos.rangeMax.toLocaleString()}</Td>
+                <Td className="text-gray-600">{pos.rangeMin != null ? `$${pos.rangeMin.toLocaleString()}` : '—'}</Td>
+                <Td className="text-gray-600">{pos.rangeMax != null ? `$${pos.rangeMax.toLocaleString()}` : '—'}</Td>
                 <Td className="font-medium">${(prices[pos.priceAsset] || 0).toLocaleString()}</Td>
                 <Td><V3StatusBadge status={pos.status} /></Td>
                 <Td className={pos.rewardsPending > 0 ? 'text-[#1A5C2A] font-medium' : 'text-gray-400'}>

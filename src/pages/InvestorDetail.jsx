@@ -279,11 +279,11 @@ function TabV3({ investor, prices }) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-xs text-gray-500">Rango Inferior</p>
-                <p className="font-semibold">${pos.rangeMin.toLocaleString()}</p>
+                <p className="font-semibold">{pos.rangeMin != null ? `$${pos.rangeMin.toLocaleString()}` : '—'}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-xs text-gray-500">Rango Superior</p>
-                <p className="font-semibold">${pos.rangeMax.toLocaleString()}</p>
+                <p className="font-semibold">{pos.rangeMax != null ? `$${pos.rangeMax.toLocaleString()}` : '—'}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-xs text-gray-500">Precio Actual ({pos.priceAsset})</p>
