@@ -1,28 +1,34 @@
 import { useApp } from '../context/AppContext';
-import { formatUSD } from '../data/investors';
-import { KpiCard, SectionHeader, Card, HFBadge, HFGauge } from '../components/ui';
+import { formatUSD, computeLendingPosition } from '../data/investors';
+import { KpiCard, SectionHeader } from '../components/ui';
 
 export default function Colaterales() {
-  const { investors } = useApp();
+  const { investors, prices } = useApp();
 
   const allLending = investors.flatMap(inv =>
-    inv.lending.map(l => ({
-      ...l,
-      investorName: inv.name,
-      investorId: inv.id,
-      totalCollateral: l.collateral.reduce((s, c) => s + c.valueUSD, 0),
-      totalDebt: l.debt.reduce((s, d) => s + d.valueUSD, 0),
-    }))
-  ).sort((a, b) => a.healthFactor - b.healthFactor);
+    inv.lending.map(l => {
+      const computed = computeLendingPosition(l, prices);
+      return {
+        ...l,
+        investorName: inv.name,
+        investorId: inv.id,
+        totalCollateral: computed.totalCollateral,
+        totalDebt: computed.totalDebt,
+        healthFactor: computed.healthFactor,
+        collateralItems: computed.collateralItems,
+        debtItems: computed.debtItems,
+      };
+    })
+  ).sort((a, b) => (a.healthFactor ?? 99) - (b.healthFactor ?? 99));
 
   const totalCollateral = allLending.reduce((s, l) => s + l.totalCollateral, 0);
   const totalDebt = allLending.reduce((s, l) => s + l.totalDebt, 0);
 
-  // Unique investors by min HF
   const investorMinHF = {};
   allLending.forEach(l => {
-    if (!investorMinHF[l.investorId] || l.healthFactor < investorMinHF[l.investorId]) {
-      investorMinHF[l.investorId] = l.healthFactor;
+    const hf = l.healthFactor;
+    if (hf !== null && (!investorMinHF[l.investorId] || hf < investorMinHF[l.investorId])) {
+      investorMinHF[l.investorId] = hf;
     }
   });
   const criticalCount = Object.values(investorMinHF).filter(hf => hf < 1.5).length;
@@ -30,7 +36,7 @@ export default function Colaterales() {
 
   return (
     <div>
-      <SectionHeader title="Colaterales & Deuda" sub="Posiciones en Aave y Venus ordenadas por riesgo (menor HF primero)" />
+      <SectionHeader title="Colaterales & Deuda" sub="Posiciones ordenadas por riesgo (menor HF primero) — HF recalculado con precios actuales" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         <KpiCard label="Total Colateral" value={formatUSD(totalCollateral)} color="green" />
@@ -41,8 +47,9 @@ export default function Colaterales() {
 
       <div className="space-y-3">
         {allLending.map((l, i) => {
-          const hfColor = l.healthFactor >= 2 ? '#1A5C2A' : l.healthFactor >= 1.5 ? '#E06000' : '#8B0000';
-          const hfBg = l.healthFactor >= 2 ? '#D6F0DC' : l.healthFactor >= 1.5 ? '#FFF3E0' : '#FFE8E8';
+          const hf = l.healthFactor;
+          const hfColor = hf >= 2 ? '#1A5C2A' : hf >= 1.5 ? '#E06000' : '#8B0000';
+          const hfBg   = hf >= 2 ? '#D6F0DC' : hf >= 1.5 ? '#FFF3E0' : '#FFE8E8';
           return (
             <div
               key={i}
@@ -93,35 +100,25 @@ export default function Colaterales() {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <div
-                    className="px-4 py-2 rounded-lg text-center"
-                    style={{ backgroundColor: hfBg, color: hfColor }}
-                  >
+                  <div className="px-4 py-2 rounded-lg text-center" style={{ backgroundColor: hfBg, color: hfColor }}>
                     <p className="text-xs font-medium opacity-70 uppercase tracking-wide">Health Factor</p>
-                    <p className="text-2xl font-bold">{l.healthFactor.toFixed(2)}</p>
-                    {l.healthFactor < 1.5 && (
-                      <p className="text-xs font-bold animate-pulse-red">⚠ CRÍTICO</p>
-                    )}
-                    {l.healthFactor >= 1.5 && l.healthFactor < 2.0 && (
-                      <p className="text-xs font-medium">VIGILANCIA</p>
-                    )}
-                    {l.healthFactor >= 2.0 && (
-                      <p className="text-xs font-medium">SEGURO</p>
-                    )}
+                    <p className="text-2xl font-bold">{hf !== null ? hf.toFixed(2) : '—'}</p>
+                    {hf < 1.5 && <p className="text-xs font-bold animate-pulse-red">⚠ CRÍTICO</p>}
+                    {hf >= 1.5 && hf < 2.0 && <p className="text-xs font-medium">VIGILANCIA</p>}
+                    {hf >= 2.0 && <p className="text-xs font-medium">SEGURO</p>}
                   </div>
                 </div>
               </div>
 
-              {/* Asset breakdown */}
               <div className="px-5 pb-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="bg-[#D6F0DC] rounded-lg p-3">
                     <p className="text-xs font-semibold text-[#1A5C2A] mb-2 uppercase tracking-wide">Colaterales</p>
                     <div className="space-y-1">
-                      {l.collateral.map((c, j) => (
+                      {l.collateralItems.map((c, j) => (
                         <div key={j} className="flex justify-between text-xs">
                           <span className="font-medium text-[#1A5C2A]">{c.amount.toLocaleString()} {c.asset}</span>
-                          <span className="text-[#1A5C2A]">{formatUSD(c.valueUSD)}</span>
+                          <span className="text-[#1A5C2A]">{formatUSD(c.computedValueUSD)}</span>
                         </div>
                       ))}
                     </div>
@@ -129,10 +126,10 @@ export default function Colaterales() {
                   <div className="bg-[#FFE8E8] rounded-lg p-3">
                     <p className="text-xs font-semibold text-[#8B0000] mb-2 uppercase tracking-wide">Deudas</p>
                     <div className="space-y-1">
-                      {l.debt.filter(d => d.amount > 0).map((d, j) => (
+                      {l.debtItems.filter(d => d.amount > 0).map((d, j) => (
                         <div key={j} className="flex justify-between text-xs">
                           <span className="font-medium text-[#8B0000]">{d.amount.toLocaleString()} {d.asset}</span>
-                          <span className="text-[#8B0000]">{formatUSD(d.valueUSD)}</span>
+                          <span className="text-[#8B0000]">{formatUSD(d.computedValueUSD)}</span>
                         </div>
                       ))}
                     </div>

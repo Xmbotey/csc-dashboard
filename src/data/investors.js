@@ -12,6 +12,41 @@ export const PRICES = {
   lastUpdated: '2026-04-02T20:49:00Z',
 };
 
+// Map token symbol → price from PRICES
+export function getAssetPrice(asset, prices) {
+  const map = {
+    ETH: prices.ETH,
+    WETH: prices.ETH,
+    wstETH: prices.wstETH,
+    BNB: prices.BNB,
+    WBNB: prices.BNB,
+    XRP: prices.XRP,
+    USDC: 1,
+    USDT: 1,
+  };
+  return map[asset] ?? 0;
+}
+
+// Recalculate a lending position's collateral value, debt and HF from live prices.
+// Each collateral item must have a `liqThreshold` (0–1).
+export function computeLendingPosition(pos, prices) {
+  const collateralItems = pos.collateral.map(c => ({
+    ...c,
+    computedValueUSD: c.amount * getAssetPrice(c.asset, prices),
+  }));
+  const debtItems = pos.debt.map(d => ({
+    ...d,
+    computedValueUSD: d.amount * getAssetPrice(d.asset, prices),
+  }));
+  const totalCollateral = collateralItems.reduce((s, c) => s + c.computedValueUSD, 0);
+  const totalDebt = debtItems.reduce((s, d) => s + d.computedValueUSD, 0);
+  const weightedCollateral = collateralItems.reduce(
+    (s, c) => s + c.computedValueUSD * (c.liqThreshold ?? 0.8), 0
+  );
+  const healthFactor = totalDebt > 0 ? weightedCollateral / totalDebt : null;
+  return { collateralItems, debtItems, totalCollateral, totalDebt, healthFactor };
+}
+
 export const investors = [
   {
     id: 'javi',
@@ -49,37 +84,34 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.8559, valueUSD: 5840 },
+          { asset: 'WETH', amount: 2.8559, valueUSD: 5840, liqThreshold: 0.825 },
         ],
         debt: [
           { asset: 'USDC', amount: 3292.94, valueUSD: 3293 },
         ],
-        healthFactor: 1.49,
         liquidationPriceETH: 1356,
       },
       {
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 3028.25, valueUSD: 3933 },
-          { asset: 'USDT', amount: 490.30, valueUSD: 490 },
+          { asset: 'XRP',  amount: 3028.25, valueUSD: 3933, liqThreshold: 0.65 },
+          { asset: 'USDT', amount: 490.30,  valueUSD: 490,  liqThreshold: 0.75 },
         ],
         debt: [
           { asset: 'USDT', amount: 2109.56, valueUSD: 2110 },
         ],
-        healthFactor: 1.40,
         liquidationPriceXRP: 0.87,
       },
       {
         protocol: 'Aave V3',
         network: 'BNB',
         collateral: [
-          { asset: 'WBNB', amount: 0.2008, valueUSD: 116 },
+          { asset: 'WBNB', amount: 0.2008, valueUSD: 116, liqThreshold: 0.80 },
         ],
         debt: [
           { asset: 'USDT', amount: 76.5, valueUSD: 76.5 },
         ],
-        healthFactor: 1.22,
         liquidationPriceBNB: 473,
       },
     ],
@@ -122,25 +154,23 @@ export const investors = [
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 4527, valueUSD: 6156 },
+          { asset: 'XRP', amount: 4527, valueUSD: 6156, liqThreshold: 0.65 },
         ],
         debt: [
           { asset: 'USDT', amount: 2620, valueUSD: 2620 },
         ],
-        healthFactor: 1.53,
         liquidationPriceXRP: 0.73,
       },
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.02, valueUSD: 4149 },
-          { asset: 'wstETH', amount: 0.876, valueUSD: 1889 },
+          { asset: 'WETH',   amount: 2.02,  valueUSD: 4149, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 0.876, valueUSD: 1889, liqThreshold: 0.80  },
         ],
         debt: [
           { asset: 'USDC', amount: 3269, valueUSD: 3269 },
         ],
-        healthFactor: 1.67,
         liquidationPriceETH: 1285,
       },
     ],
@@ -197,24 +227,22 @@ export const investors = [
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 3711, valueUSD: 5047 },
+          { asset: 'XRP', amount: 3711, valueUSD: 5047, liqThreshold: 0.65 },
         ],
         debt: [
           { asset: 'USDT', amount: 1965, valueUSD: 1965 },
         ],
-        healthFactor: 1.67,
         liquidationPriceXRP: 0.70,
       },
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.032, valueUSD: 4174 },
+          { asset: 'WETH', amount: 2.032, valueUSD: 4174, liqThreshold: 0.825 },
         ],
         debt: [
           { asset: 'USDC', amount: 2292, valueUSD: 2292 },
         ],
-        healthFactor: 1.65,
         liquidationPriceETH: 1330,
       },
     ],
@@ -258,14 +286,13 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.044, valueUSD: 4198 },
-          { asset: 'wstETH', amount: 0.914, valueUSD: 1970 },
+          { asset: 'WETH',   amount: 2.044, valueUSD: 4198, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 0.914, valueUSD: 1970, liqThreshold: 0.80  },
         ],
         debt: [
           { asset: 'USDC', amount: 3463, valueUSD: 3463 },
-          { asset: 'WETH', amount: 0, valueUSD: 0 },
+          { asset: 'WETH', amount: 0,    valueUSD: 0    },
         ],
-        healthFactor: 1.60,
         liquidationPriceETH: 1285,
       },
     ],
@@ -323,25 +350,23 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 5.064, valueUSD: 10401 },
-          { asset: 'wstETH', amount: 2.578, valueUSD: 5557 },
+          { asset: 'WETH',   amount: 5.064, valueUSD: 10401, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 2.578, valueUSD: 5557,  liqThreshold: 0.80  },
         ],
         debt: [
           { asset: 'USDC', amount: 8620, valueUSD: 8620 },
         ],
-        healthFactor: 1.69,
         liquidationPriceETH: 1300,
       },
       {
         protocol: 'Aave V3',
         network: 'BNB',
         collateral: [
-          { asset: 'WBNB', amount: 6.79, valueUSD: 4196 },
+          { asset: 'WBNB', amount: 6.79, valueUSD: 4196, liqThreshold: 0.80 },
         ],
         debt: [
           { asset: 'USDT', amount: 2036, valueUSD: 2036 },
         ],
-        healthFactor: 1.55,
         liquidationPriceBNB: 475,
       },
     ],
@@ -412,37 +437,34 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 8.532, valueUSD: 17526 },
-          { asset: 'wstETH', amount: 2.52, valueUSD: 5432 },
+          { asset: 'WETH',   amount: 8.532, valueUSD: 17526, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 2.52,  valueUSD: 5432,  liqThreshold: 0.80  },
         ],
         debt: [
           { asset: 'USDC', amount: 15058, valueUSD: 15058 },
         ],
-        healthFactor: 1.41,
         liquidationPriceETH: 1340,
       },
       {
         protocol: 'Aave V3',
         network: 'BNB',
         collateral: [
-          { asset: 'WBNB', amount: 6.79, valueUSD: 4196 },
+          { asset: 'WBNB', amount: 6.79, valueUSD: 4196, liqThreshold: 0.80 },
         ],
         debt: [
           { asset: 'USDT', amount: 2036, valueUSD: 2036 },
         ],
-        healthFactor: 1.55,
         liquidationPriceBNB: 475,
       },
       {
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 5380, valueUSD: 7317 },
+          { asset: 'XRP', amount: 5380, valueUSD: 7317, liqThreshold: 0.65 },
         ],
         debt: [
           { asset: 'USDT', amount: 2386, valueUSD: 2386 },
         ],
-        healthFactor: 2.00,
         liquidationPriceXRP: 0.59,
       },
     ],
@@ -458,10 +480,9 @@ export const investors = [
     pe: null,
     capitalInicial: null,
     fechaEntrada: null,
-    // 192 days active as of 2026-04-02 → startDate = 2025-09-22
     startDate: '2025-09-22',
     nsEstimado: 1800,
-    aprPrevisto: 40,      // media entre posiciones activas (58.82% en rango)
+    aprPrevisto: 40,
     diasRestantes: 30,
 
     wallet: [
@@ -474,7 +495,6 @@ export const investors = [
 
     v3Positions: [
       {
-        // EN RANGO — Mar 16, 2026
         id: '#5061323',
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
@@ -482,13 +502,12 @@ export const investors = [
         liquidity: 5375.58,
         rangeMin: 1900.79,
         rangeMax: 2399.49,
-        rewardsPending: 45.69,   // 0.0108 WETH ($22.19) + 23.4946 USDC ($23.50)
+        rewardsPending: 45.69,
         apr: 58.82,
         fechaApertura: '2026-03-16',
         priceAsset: 'ETH',
       },
       {
-        // FUERA DE RANGO (precio por debajo del mínimo) — Nov 6, 2025
         id: '#5370493',
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
@@ -496,13 +515,12 @@ export const investors = [
         liquidity: 2072.63,
         rangeMin: 2107.00,
         rangeMax: 3703.35,
-        rewardsPending: 55.76,   // 0.0134 WETH ($27.55) + 28.2091 USDC ($28.21)
+        rewardsPending: 55.76,
         apr: 23.48,
         fechaApertura: '2025-11-06',
         priceAsset: 'ETH',
       },
       {
-        // FUERA DE RANGO — Sep 24, 2025 — rango pendiente de captura
         id: '#4928029',
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
@@ -518,29 +536,27 @@ export const investors = [
       },
     ],
 
-    lending: [],   // sin posiciones de lending activas
+    lending: [],
 
     deltas: [],
   },
 ];
 
-// Helper: determine V3 status based on current prices
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
 export function getV3Status(position, prices) {
-  // If range is not set yet, treat as OUT_OF_RANGE
   if (position.rangeMin === null || position.rangeMax === null) return 'OUT_OF_RANGE';
   const price = prices[position.priceAsset] || 0;
   if (price === 0) return 'UNKNOWN';
   return price >= position.rangeMin && price <= position.rangeMax ? 'IN_RANGE' : 'OUT_OF_RANGE';
 }
 
-// Helper: HF color
 export function getHFColor(hf) {
   if (hf >= 2.0) return 'green';
   if (hf >= 1.5) return 'orange';
   return 'red';
 }
 
-// Helper: format currency
 export function formatUSD(value) {
   if (value === null || value === undefined) return '—';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
@@ -551,7 +567,6 @@ export function formatUSD2(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(value);
 }
 
-// Helper: days active and days remaining to 365
 export function getDaysInfo(startDate) {
   if (!startDate) return { daysActive: null, daysToComplete: null };
   const start = new Date(startDate);
@@ -562,7 +577,6 @@ export function getDaysInfo(startDate) {
   return { daysActive, daysToComplete };
 }
 
-// Helper: check if wallet gas is low (ETH or BNB < $15)
 export function hasLowGas(wallet) {
   const eth = wallet.find(t => t.asset === 'ETH');
   const bnb = wallet.find(t => t.asset === 'BNB' || t.asset === 'WBNB');
@@ -571,16 +585,16 @@ export function hasLowGas(wallet) {
   return { ethLow, bnbLow, anyLow: ethLow || bnbLow };
 }
 
-// Compute derived totals for an investor
 export function getInvestorSummary(investor, prices) {
   const v3Statuses = investor.v3Positions.map(p => getV3Status(p, prices));
   const activeV3 = investor.v3Positions.filter((p, i) => v3Statuses[i] === 'IN_RANGE');
   const totalRewards = investor.v3Positions.reduce((s, p) => s + (p.rewardsPending || 0), 0);
-  const minHF = investor.lending.length > 0
-    ? Math.min(...investor.lending.map(l => l.healthFactor))
-    : null;
 
-  // Projections
+  // Dynamic HF from live prices
+  const lendingComputed = investor.lending.map(l => computeLendingPosition(l, prices));
+  const hfValues = lendingComputed.map(l => l.healthFactor).filter(h => h !== null && isFinite(h));
+  const minHF = hfValues.length > 0 ? Math.min(...hfValues) : null;
+
   const activeV3Liquidity = activeV3.reduce((s, p) => s + p.liquidity, 0);
   const rewards30d = activeV3Liquidity * (investor.aprPrevisto / 100) * (30 / 365);
   const rewardsAnnual = activeV3Liquidity * (investor.aprPrevisto / 100);
@@ -595,7 +609,7 @@ export function getInvestorSummary(investor, prices) {
   if (minHF !== null && minHF < 1.5) status = 'CRÍTICO';
   else if (minHF !== null && minHF < 2.0) status = 'VIGILANCIA';
 
-  const gasInfo = hasLowGas(investor.wallet || []);
+  const gasAlert = hasLowGas(investor.wallet || []).anyLow;
 
   return {
     activeV3Count: activeV3.length,
@@ -609,6 +623,7 @@ export function getInvestorSummary(investor, prices) {
     grossProfit,
     cscFee,
     netProfit,
-    gasAlert: gasInfo.anyLow,
+    gasAlert,
+    lendingComputed,
   };
 }
