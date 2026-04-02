@@ -1,5 +1,5 @@
 // CSC Dashboard — Investor Data
-// ETH: $2,054 | BNB: $618 | XRP: $1.36
+// ETH: $2,047 | BNB: $580 | XRP: $1.2994
 
 export const PRICES = {
   ETH: 2047,
@@ -9,14 +9,14 @@ export const PRICES = {
   USDT: 1,
   wstETH: 2047 * 1.05,
   WBNB: 580,
-  lastUpdated: '2026-04-02T20:26:00Z',
+  lastUpdated: '2026-04-02T20:33:00Z',
 };
 
 export const investors = [
   {
     id: 'javi',
     name: 'Javi',
-    portfolioTotal: 5399,
+    portfolioTotal: 5007,
     pe: 4000,
     peNote: 'ciclo anterior',
     capitalInicial: null,
@@ -46,32 +46,32 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.856, valueUSD: 5866 },
+          { asset: 'WETH', amount: 2.8559, valueUSD: 5840 },
         ],
         debt: [
-          { asset: 'USDC', amount: 3294, valueUSD: 3294 },
+          { asset: 'USDC', amount: 3292.94, valueUSD: 3293 },
         ],
-        healthFactor: 1.55,
+        healthFactor: 1.49,
         liquidationPriceETH: 1356,
       },
       {
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 3028, valueUSD: 4118 },
-          { asset: 'USDT', amount: 490, valueUSD: 490 },
+          { asset: 'XRP', amount: 3028.25, valueUSD: 3933 },
+          { asset: 'USDT', amount: 490.30, valueUSD: 490 },
         ],
         debt: [
-          { asset: 'USDT', amount: 2108, valueUSD: 2108 },
+          { asset: 'USDT', amount: 2109.56, valueUSD: 2110 },
         ],
-        healthFactor: 1.44,
+        healthFactor: 1.40,
         liquidationPriceXRP: 0.87,
       },
       {
         protocol: 'Aave V3',
         network: 'BNB',
         collateral: [
-          { asset: 'WBNB', amount: 0.2008, valueUSD: 124 },
+          { asset: 'WBNB', amount: 0.2008, valueUSD: 116 },
         ],
         debt: [
           { asset: 'USDT', amount: 76.5, valueUSD: 76.5 },
