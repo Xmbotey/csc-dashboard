@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useApp } from '../context/AppContext';
-import { getInvestorSummary, getV3Status, formatUSD, formatUSD2, getHFColor } from '../data/investors';
+import { getInvestorSummary, getV3Status, formatUSD, formatUSD2, getHFColor, getDaysInfo, hasLowGas } from '../data/investors';
 import {
   Card, Badge, HFBadge, V3StatusBadge, InvestorStatusBadge,
   Table, Th, Td, SectionHeader, HFGauge, EditableInput
@@ -92,6 +92,10 @@ function TabResumen({ investor, summary, prices, editing, editData, setEditData 
   const totalDebt = investor.lending.reduce((s, l) => s + l.debt.reduce((a, d) => a + d.valueUSD, 0), 0);
   const totalV3Liq = investor.v3Positions.reduce((s, p) => s + p.liquidity, 0);
   const freeCapital = Math.max(0, investor.portfolioTotal - totalV3Liq - totalCollateral);
+  const { daysActive, daysToComplete } = getDaysInfo(investor.startDate);
+  const gasInfo = hasLowGas(investor.wallet || []);
+  const wallet = investor.wallet || [];
+  const totalWallet = wallet.reduce((s, t) => s + t.valueUSD, 0);
 
   const pieData = [
     { name: 'V3 Liquidez', value: totalV3Liq, color: '#2E4A9E' },
@@ -100,64 +104,151 @@ function TabResumen({ investor, summary, prices, editing, editData, setEditData 
   ].filter(d => d.value > 0);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Card className="p-5 lg:col-span-2">
-        <h3 className="font-semibold text-[#1E2A6E] mb-4 text-sm uppercase tracking-wide">Datos Básicos</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-xs text-gray-500">Portfolio Total</p>
-            {editing ? (
-              <EditableInput value={editData.portfolioTotal} onChange={v => setEditData(d => ({ ...d, portfolioTotal: v }))} />
-            ) : (
-              <p className="font-bold text-[#1E2A6E] text-lg">{formatUSD(investor.portfolioTotal)}</p>
-            )}
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card className="p-5 lg:col-span-2">
+          <h3 className="font-semibold text-[#1E2A6E] mb-4 text-sm uppercase tracking-wide">Datos Básicos</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs text-gray-500">Portfolio Total</p>
+              {editing ? (
+                <EditableInput value={editData.portfolioTotal} onChange={v => setEditData(d => ({ ...d, portfolioTotal: v }))} />
+              ) : (
+                <p className="font-bold text-[#1E2A6E] text-lg">{formatUSD(investor.portfolioTotal)}</p>
+              )}
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">PE Actual</p>
+              {editing ? (
+                <EditableInput value={editData.pe} onChange={v => setEditData(d => ({ ...d, pe: v }))} />
+              ) : (
+                <p className="font-bold text-[#1E2A6E] text-lg">{formatUSD(investor.pe)}</p>
+              )}
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">V3 En Rango</p>
+              <p className="font-semibold">{summary.activeV3Count} / {summary.totalV3Count}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Rewards Pendientes</p>
+              <p className="font-semibold text-[#1A5C2A]">{formatUSD(summary.totalRewards)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">HF Mínimo</p>
+              <HFBadge hf={summary.minHF} />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Ns Estimado</p>
+              <p className="font-semibold">{formatUSD(investor.nsEstimado)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Total Colateral</p>
+              <p className="font-semibold">{formatUSD(totalCollateral)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Total Deuda</p>
+              <p className="font-semibold text-[#8B0000]">{formatUSD(totalDebt)}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs text-gray-500">PE Actual</p>
-            {editing ? (
-              <EditableInput value={editData.pe} onChange={v => setEditData(d => ({ ...d, pe: v }))} />
-            ) : (
-              <p className="font-bold text-[#1E2A6E] text-lg">{formatUSD(investor.pe)}</p>
-            )}
+        </Card>
+
+        <Card className="p-5">
+          <h3 className="font-semibold text-[#1E2A6E] mb-3 text-sm uppercase tracking-wide">Composición</h3>
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value" paddingAngle={2}>
+                {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+              </Pie>
+              <Tooltip formatter={v => formatUSD(v)} />
+              <Legend iconSize={10} formatter={v => <span className="text-xs">{v}</span>} />
+            </PieChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
+
+      {/* ── Días activos ──────────────────────────────────────── */}
+      <Card className="p-5">
+        <h3 className="font-semibold text-[#1E2A6E] mb-3 text-sm uppercase tracking-wide">Actividad de la billetera</h3>
+        {daysActive === null ? (
+          <p className="text-sm text-gray-400 italic">Pendiente de actualizar</p>
+        ) : (
+          <div className="flex flex-wrap gap-6">
+            <div>
+              <p className="text-xs text-gray-500">Días activos</p>
+              <p className="text-2xl font-bold text-[#1E2A6E]">{daysActive}</p>
+              <p className="text-xs text-gray-400">desde {investor.startDate}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Días para completar el año</p>
+              <p className={`text-2xl font-bold ${daysToComplete === 0 ? 'text-[#1A5C2A]' : 'text-[#E06000]'}`}>
+                {daysToComplete === 0 ? '¡Completado!' : daysToComplete}
+              </p>
+              <p className="text-xs text-gray-400">
+                {daysToComplete > 0 ? `vence el ${new Date(new Date(investor.startDate).getTime() + 365 * 86400000).toLocaleDateString('es-ES')}` : '365 días cumplidos'}
+              </p>
+            </div>
+            <div className="flex-1 min-w-40">
+              <p className="text-xs text-gray-500 mb-1.5">Progreso anual</p>
+              <div className="w-full bg-gray-100 rounded-full h-3">
+                <div
+                  className="h-3 rounded-full transition-all"
+                  style={{
+                    width: `${Math.min(100, (daysActive / 365) * 100).toFixed(1)}%`,
+                    background: daysToComplete === 0 ? '#1A5C2A' : '#1E2A6E',
+                  }}
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{Math.min(100, ((daysActive / 365) * 100)).toFixed(1)}% completado</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs text-gray-500">V3 En Rango</p>
-            <p className="font-semibold">{summary.activeV3Count} / {summary.totalV3Count}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Rewards Pendientes</p>
-            <p className="font-semibold text-[#1A5C2A]">{formatUSD(summary.totalRewards)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">HF Mínimo</p>
-            <HFBadge hf={summary.minHF} />
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Ns Estimado</p>
-            <p className="font-semibold">{formatUSD(investor.nsEstimado)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Total Colateral</p>
-            <p className="font-semibold">{formatUSD(totalCollateral)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Total Deuda</p>
-            <p className="font-semibold text-[#8B0000]">{formatUSD(totalDebt)}</p>
-          </div>
-        </div>
+        )}
       </Card>
 
+      {/* ── Wallet / Gas ──────────────────────────────────────── */}
       <Card className="p-5">
-        <h3 className="font-semibold text-[#1E2A6E] mb-3 text-sm uppercase tracking-wide">Composición</h3>
-        <ResponsiveContainer width="100%" height={180}>
-          <PieChart>
-            <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value" paddingAngle={2}>
-              {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-            </Pie>
-            <Tooltip formatter={v => formatUSD(v)} />
-            <Legend iconSize={10} formatter={v => <span className="text-xs">{v}</span>} />
-          </PieChart>
-        </ResponsiveContainer>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-[#1E2A6E] text-sm uppercase tracking-wide">Wallet</h3>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 font-medium">Total: {formatUSD(totalWallet)}</span>
+            {gasInfo.anyLow && (
+              <span className="flex items-center gap-1 px-2 py-0.5 bg-[#8B0000] text-white text-xs font-bold rounded-full animate-pulse-red">
+                ⚠ GAS BAJO
+              </span>
+            )}
+          </div>
+        </div>
+
+        {wallet.length === 0 ? (
+          <p className="text-sm text-gray-400 italic">Pendiente de actualizar</p>
+        ) : (
+          <div className="space-y-1">
+            {wallet.map((token, i) => {
+              const isGasToken = token.asset === 'ETH' || token.asset === 'BNB' || token.asset === 'WBNB';
+              const isLow = isGasToken && token.valueUSD < 15;
+              return (
+                <div
+                  key={i}
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm ${
+                    isLow ? 'bg-[#FFE8E8] border border-[#8B0000]/20' : 'bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`font-semibold ${isLow ? 'text-[#8B0000]' : 'text-[#1E2A6E]'}`}>
+                      {token.asset}
+                    </span>
+                    {isLow && <span className="text-[#8B0000] text-xs font-bold">⚠ Gas bajo</span>}
+                  </div>
+                  <div className="text-right">
+                    <span className="text-gray-500 text-xs mr-3">{token.amount.toLocaleString(undefined, { maximumFractionDigits: 6 })}</span>
+                    <span className={`font-medium ${isLow ? 'text-[#8B0000]' : ''}`}>
+                      ${token.valueUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Card>
     </div>
   );

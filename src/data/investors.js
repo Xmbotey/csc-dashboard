@@ -9,7 +9,7 @@ export const PRICES = {
   USDT: 1,
   wstETH: 2047 * 1.05,
   WBNB: 580,
-  lastUpdated: '2026-04-02T20:33:00Z',
+  lastUpdated: '2026-04-02T20:49:00Z',
 };
 
 export const investors = [
@@ -21,9 +21,12 @@ export const investors = [
     peNote: 'ciclo anterior',
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 25,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -91,9 +94,12 @@ export const investors = [
     pe: 2146,
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 30,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -149,9 +155,12 @@ export const investors = [
     pe: 2148,
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 25,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -220,9 +229,12 @@ export const investors = [
     pe: 2127,
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 25,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -268,9 +280,12 @@ export const investors = [
     pe: 2152,
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 28,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -341,9 +356,12 @@ export const investors = [
     pe: 2152,
     capitalInicial: null,
     fechaEntrada: null,
+    startDate: null,
     nsEstimado: 1800,
     aprPrevisto: 25,
     diasRestantes: 30,
+
+    wallet: [],
 
     v3Positions: [
       {
@@ -431,10 +449,85 @@ export const investors = [
 
     deltas: [],
   },
+
+  // ── CARMEN ────────────────────────────────────────────────────────────────
+  {
+    id: 'carmen',
+    name: 'Carmen',
+    portfolioTotal: 7730,
+    pe: null,
+    capitalInicial: null,
+    fechaEntrada: null,
+    // 192 days active as of 2026-04-02 → startDate = 2025-09-22
+    startDate: '2025-09-22',
+    nsEstimado: 1800,
+    aprPrevisto: 40,      // media entre posiciones activas (58.82% en rango)
+    diasRestantes: 30,
+
+    wallet: [
+      { asset: 'ETH',    amount: 0.0979,   valueUSD: 201.13 },
+      { asset: 'WETH',   amount: 0.0075,   valueUSD: 15.49  },
+      { asset: 'USDC',   amount: 0.7867,   valueUSD: 0.79   },
+      { asset: 'MON',    amount: 1.0000,   valueUSD: 0.02   },
+      { asset: 'wstETH', amount: 0.063303, valueUSD: 0.01   },
+    ],
+
+    v3Positions: [
+      {
+        // EN RANGO — Mar 16, 2026
+        id: '#5061323',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 5375.58,
+        rangeMin: 1900.79,
+        rangeMax: 2399.49,
+        rewardsPending: 45.69,   // 0.0108 WETH ($22.19) + 23.4946 USDC ($23.50)
+        apr: 58.82,
+        fechaApertura: '2026-03-16',
+        priceAsset: 'ETH',
+      },
+      {
+        // FUERA DE RANGO (precio por debajo del mínimo) — Nov 6, 2025
+        id: '#5370493',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 2072.63,
+        rangeMin: 2107.00,
+        rangeMax: 3703.35,
+        rewardsPending: 55.76,   // 0.0134 WETH ($27.55) + 28.2091 USDC ($28.21)
+        apr: 23.48,
+        fechaApertura: '2025-11-06',
+        priceAsset: 'ETH',
+      },
+      {
+        // FUERA DE RANGO — Sep 24, 2025 — rango pendiente de captura
+        id: '#4928029',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 64.47,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 0,
+        apr: 378.89,
+        fechaApertura: '2025-09-24',
+        priceAsset: 'ETH',
+        note: 'Rango pendiente de actualización',
+      },
+    ],
+
+    lending: [],   // sin posiciones de lending activas
+
+    deltas: [],
+  },
 ];
 
 // Helper: determine V3 status based on current prices
 export function getV3Status(position, prices) {
+  // If range is not set yet, treat as OUT_OF_RANGE
+  if (position.rangeMin === null || position.rangeMax === null) return 'OUT_OF_RANGE';
   const price = prices[position.priceAsset] || 0;
   if (price === 0) return 'UNKNOWN';
   return price >= position.rangeMin && price <= position.rangeMax ? 'IN_RANGE' : 'OUT_OF_RANGE';
@@ -456,6 +549,26 @@ export function formatUSD(value) {
 export function formatUSD2(value) {
   if (value === null || value === undefined) return '—';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(value);
+}
+
+// Helper: days active and days remaining to 365
+export function getDaysInfo(startDate) {
+  if (!startDate) return { daysActive: null, daysToComplete: null };
+  const start = new Date(startDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysActive = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+  const daysToComplete = Math.max(0, 365 - daysActive);
+  return { daysActive, daysToComplete };
+}
+
+// Helper: check if wallet gas is low (ETH or BNB < $15)
+export function hasLowGas(wallet) {
+  const eth = wallet.find(t => t.asset === 'ETH');
+  const bnb = wallet.find(t => t.asset === 'BNB' || t.asset === 'WBNB');
+  const ethLow = eth ? eth.valueUSD < 15 : false;
+  const bnbLow = bnb ? bnb.valueUSD < 15 : false;
+  return { ethLow, bnbLow, anyLow: ethLow || bnbLow };
 }
 
 // Compute derived totals for an investor
@@ -482,6 +595,8 @@ export function getInvestorSummary(investor, prices) {
   if (minHF !== null && minHF < 1.5) status = 'CRÍTICO';
   else if (minHF !== null && minHF < 2.0) status = 'VIGILANCIA';
 
+  const gasInfo = hasLowGas(investor.wallet || []);
+
   return {
     activeV3Count: activeV3.length,
     totalV3Count: investor.v3Positions.length,
@@ -494,5 +609,6 @@ export function getInvestorSummary(investor, prices) {
     grossProfit,
     cscFee,
     netProfit,
+    gasAlert: gasInfo.anyLow,
   };
 }
