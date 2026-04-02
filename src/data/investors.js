@@ -2,14 +2,14 @@
 // ETH: $2,054 | BNB: $618 | XRP: $1.36
 
 export const PRICES = {
-  ETH: 2054,
-  BNB: 618,
-  XRP: 1.36,
+  ETH: 2047,
+  BNB: 580,
+  XRP: 1.2994,
   USDC: 1,
   USDT: 1,
-  wstETH: 2054 * 1.05, // approximately
-  WBNB: 618,
-  lastUpdated: '2026-04-02T13:00:00Z',
+  wstETH: 2047 * 1.05,
+  WBNB: 580,
+  lastUpdated: '2026-04-02T20:26:00Z',
 };
 
 export const investors = [
