@@ -107,7 +107,8 @@ export function HFGauge({ hf }) {
   if (!hf) return null;
   const max = 3;
   const capped = Math.min(hf, max);
-  const angle = -90 + (capped / max) * 180;
+  // Arc spans from left (180°) through top (270°) to right (360°) in SVG coords (Y-down)
+  const angleRad = (180 + (capped / max) * 180) * (Math.PI / 180);
   const color = hf >= 2.0 ? '#1A5C2A' : hf >= 1.5 ? '#E06000' : '#8B0000';
 
   return (
@@ -127,8 +128,8 @@ export function HFGauge({ hf }) {
         {/* Needle */}
         <line
           x1="60" y1="60"
-          x2={60 + 35 * Math.cos((angle * Math.PI) / 180)}
-          y2={60 + 35 * Math.sin((angle * Math.PI) / 180)}
+          x2={60 + 35 * Math.cos(angleRad)}
+          y2={60 + 35 * Math.sin(angleRad)}
           stroke="#1E2A6E" strokeWidth="2.5" strokeLinecap="round"
         />
         <circle cx="60" cy="60" r="4" fill="#1E2A6E" />
