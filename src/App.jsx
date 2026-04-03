@@ -9,6 +9,7 @@ import V3Positions from './pages/V3Positions';
 import Deltas from './pages/Deltas';
 import Colaterales from './pages/Colaterales';
 import Proyecciones from './pages/Proyecciones';
+import Simulador from './pages/Simulador';
 import TotalesCSC from './pages/TotalesCSC';
 
 function AppRoutes() {
@@ -26,6 +27,7 @@ function AppRoutes() {
         <Route path="/deltas" element={<Deltas />} />
         <Route path="/colaterales" element={<Colaterales />} />
         <Route path="/proyecciones" element={<Proyecciones />} />
+        <Route path="/simulador" element={<Simulador />} />
         <Route path="/totales-csc" element={<TotalesCSC />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
