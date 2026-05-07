@@ -10,6 +10,7 @@ import Deltas from './pages/Deltas';
 import Colaterales from './pages/Colaterales';
 import Proyecciones from './pages/Proyecciones';
 import Simulador from './pages/Simulador';
+import DatosActuales from './pages/DatosActuales';
 import TotalesCSC from './pages/TotalesCSC';
 
 function AppRoutes() {
@@ -28,6 +29,7 @@ function AppRoutes() {
         <Route path="/colaterales" element={<Colaterales />} />
         <Route path="/proyecciones" element={<Proyecciones />} />
         <Route path="/simulador" element={<Simulador />} />
+        <Route path="/datos-actuales" element={<DatosActuales />} />
         <Route path="/totales-csc" element={<TotalesCSC />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
