@@ -51,6 +51,7 @@ export const investors = [
   {
     id: 'javi',
     name: 'Javi',
+    debankUrl: 'https://debank.com/profile/0xf4adc82dc4e78e1e695762087905308769079146',
     portfolioTotal: 5007,
     pe: 4000,
     peNote: 'ciclo anterior',
@@ -122,6 +123,7 @@ export const investors = [
   {
     id: 'jose',
     name: 'José',
+    debankUrl: 'https://debank.com/profile/0x25b6afcf82014dc263b6bba28a73d16b0f760ab4',
     portfolioTotal: 6989,
     pe: 2146,
     capitalInicial: null,
@@ -181,6 +183,7 @@ export const investors = [
   {
     id: 'benjy',
     name: 'Benjy',
+    debankUrl: 'https://debank.com/profile/0x08e8563776ba62e43ef8fe324ce325bb4452ad0c',
     portfolioTotal: 5393,
     pe: 2148,
     capitalInicial: null,
@@ -253,6 +256,7 @@ export const investors = [
   {
     id: 'irene',
     name: 'Irene',
+    debankUrl: 'https://debank.com/profile/0xed2affb53c1840b82c84240f9f7dda86b02a4f9f',
     portfolioTotal: 3323,
     pe: 2127,
     capitalInicial: null,
@@ -303,6 +307,7 @@ export const investors = [
   {
     id: 'robert',
     name: 'Robert',
+    debankUrl: 'https://debank.com/profile/0xca701bc6a3f762c5ecc3da46a04ee32fc6a6ba93',
     portfolioTotal: 11128,
     pe: 2152,
     capitalInicial: null,
@@ -377,6 +382,7 @@ export const investors = [
   {
     id: 'gabi',
     name: 'Gabi',
+    debankUrl: 'https://debank.com/profile/0x37080c717bfe37f87f26c7f84afce57ba9a32d17',
     portfolioTotal: 17951,
     pe: 2152,
     capitalInicial: null,
@@ -476,6 +482,7 @@ export const investors = [
   {
     id: 'carmen',
     name: 'Carmen',
+    debankUrl: 'https://debank.com/profile/0x485d68bdabc9d8134c742f82bb7fc10750189255',
     portfolioTotal: 7730,
     pe: null,
     capitalInicial: null,

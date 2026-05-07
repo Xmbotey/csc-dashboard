@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Droplets, Zap, Building2,
-  TrendingUp, Calculator, DollarSign, LogOut, Menu, X
+  TrendingUp, Calculator, Radio, DollarSign, LogOut, Menu, X
 } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
@@ -14,6 +14,7 @@ const navItems = [
   { path: '/colaterales', icon: Building2, label: 'Colaterales & Deuda' },
   { path: '/proyecciones', icon: TrendingUp, label: 'Proyecciones' },
   { path: '/simulador', icon: Calculator, label: 'Simulador' },
+  { path: '/datos-actuales', icon: Radio, label: 'Datos Actuales' },
   { path: '/totales-csc', icon: DollarSign, label: 'Totales CSC' },
 ];
 
