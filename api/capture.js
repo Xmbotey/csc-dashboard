@@ -12,10 +12,11 @@ export default async function handler(req, res) {
       screenshot: 'true',
       meta: 'false',
       'viewport.width': '1280',
-      'viewport.height': '900',
+      'viewport.height': '4000',
       'screenshot.fullPage': 'true',
       'screenshot.type': 'jpeg',
-      waitForTimeout: '5000',
+      'screenshot.quality': '80',
+      waitForTimeout: '7000',
     });
 
     const mlRes = await fetch(`https://api.microlink.io?${params}`);
