@@ -12,6 +12,7 @@ import Proyecciones from './pages/Proyecciones';
 import Simulador from './pages/Simulador';
 import DatosActuales from './pages/DatosActuales';
 import TotalesCSC from './pages/TotalesCSC';
+import TuPelicula from './pages/TuPelicula';
 
 function AppRoutes() {
   const { isLoggedIn } = useApp();
@@ -19,21 +20,29 @@ function AppRoutes() {
   if (!isLoggedIn) return <Login />;
 
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Overview />} />
-        <Route path="/inversores" element={<InvestorList />} />
-        <Route path="/inversores/:id" element={<InvestorDetail />} />
-        <Route path="/posiciones-v3" element={<V3Positions />} />
-        <Route path="/deltas" element={<Deltas />} />
-        <Route path="/colaterales" element={<Colaterales />} />
-        <Route path="/proyecciones" element={<Proyecciones />} />
-        <Route path="/simulador" element={<Simulador />} />
-        <Route path="/datos-actuales" element={<DatosActuales />} />
-        <Route path="/totales-csc" element={<TotalesCSC />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      {/* Full-screen standalone — no sidebar */}
+      <Route path="/tu-pelicula" element={<TuPelicula />} />
+
+      {/* All other routes with sidebar layout */}
+      <Route path="*" element={
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Overview />} />
+            <Route path="/inversores" element={<InvestorList />} />
+            <Route path="/inversores/:id" element={<InvestorDetail />} />
+            <Route path="/posiciones-v3" element={<V3Positions />} />
+            <Route path="/deltas" element={<Deltas />} />
+            <Route path="/colaterales" element={<Colaterales />} />
+            <Route path="/proyecciones" element={<Proyecciones />} />
+            <Route path="/simulador" element={<Simulador />} />
+            <Route path="/datos-actuales" element={<DatosActuales />} />
+            <Route path="/totales-csc" element={<TotalesCSC />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      } />
+    </Routes>
   );
 }
 
