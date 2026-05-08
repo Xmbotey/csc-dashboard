@@ -9,7 +9,7 @@ export const PRICES = {
   USDT: 1,
   wstETH: 2813,
   WBNB: 637,
-  ARB: 7.80,
+  ARB: 0.1282,
   GHO: 1,
   'USD₮0': 1,
   WBTC: 79380,
@@ -85,7 +85,7 @@ export const investors = [
         pool: 'SPELL Rewards',
         protocol: 'Abracadabra',
         network: 'Arbitrum',
-        liquidity: 4.43,
+        liquidity: 0,
         rangeMin: null,
         rangeMax: null,
         rewardsPending: 4.43,
@@ -390,9 +390,8 @@ export const investors = [
       {
         protocol: 'YLDR',
         network: 'Arbitrum',
-        reportedHF: 1.55,
         collateral: [
-          { asset: 'ARB', amount: 5.8064, valueUSD: 45, liqThreshold: 0.80 },
+          { asset: 'ARB', amount: 5.8064, valueUSD: 1, liqThreshold: 0.72 },
         ],
         debt: [
           { asset: 'USD₮0', amount: 0.3406, valueUSD: 0 },
@@ -433,6 +432,7 @@ export const investors = [
         liquidity: 6017.16,
         rangeMin: 1900.79,
         rangeMax: 2399.49,
+        tokens: [{ asset: 'WETH', amount: 2.1819 }, { asset: 'USDC', amount: 905.8250 }],
         rewardsPending: 131.04,
         apr: 58.82,
         fechaApertura: '2026-03-16',
@@ -446,6 +446,7 @@ export const investors = [
         liquidity: 2240.83,
         rangeMin: 2107.00,
         rangeMax: 3703.35,
+        tokens: [{ asset: 'WETH', amount: 0.2047 }, { asset: 'USDC', amount: 1646.0332 }],
         rewardsPending: 127.64,
         apr: 23.48,
         fechaApertura: '2025-11-06',
@@ -459,11 +460,11 @@ export const investors = [
         liquidity: 71.65,
         rangeMin: null,
         rangeMax: null,
+        tokens: [{ asset: 'WETH', amount: 0.0314 }, { asset: 'USDC', amount: 0 }],
         rewardsPending: 0,
         apr: 0,
         fechaApertura: '2025-09-24',
         priceAsset: 'ETH',
-        note: 'Rango pendiente de actualización',
       },
     ],
 
@@ -500,7 +501,7 @@ export const investors = [
         liquidity: 1521.93,
         rangeMin: null,
         rangeMax: null,
-        confirmedInRange: true,
+        tokens: [{ asset: 'WETH', amount: 0.1465 }, { asset: 'USDC', amount: 1181.5289 }],
         rewardsPending: 6.17,
         apr: 0,
         fechaApertura: null,
@@ -514,7 +515,7 @@ export const investors = [
         liquidity: 1350.82,
         rangeMin: null,
         rangeMax: null,
-        confirmedInRange: true,
+        tokens: [{ asset: 'WETH', amount: 0.5042 }, { asset: 'USDC', amount: 170.2996 }],
         rewardsPending: 29.84,
         apr: 0,
         fechaApertura: null,
@@ -556,7 +557,7 @@ export const investors = [
         liquidity: 13201.06,
         rangeMin: null,
         rangeMax: null,
-        confirmedInRange: true,
+        tokens: [{ asset: 'WETH', amount: 5.7774 }, { asset: 'USDC', amount: 0 }],
         rewardsPending: 13.76,
         apr: 0,
         fechaApertura: null,
@@ -570,7 +571,7 @@ export const investors = [
         liquidity: 511.64,
         rangeMin: null,
         rangeMax: null,
-        confirmedInRange: true,
+        tokens: [{ asset: 'WETH', amount: 0.0322 }, { asset: 'USDC', amount: 430.9133 }],
         rewardsPending: 7.17,
         apr: 0,
         fechaApertura: null,
@@ -587,6 +588,9 @@ export const investors = [
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 export function getV3Status(position, prices) {
+  if (position.tokens && position.tokens.length >= 2) {
+    return position.tokens.every(t => t.amount > 0) ? 'IN_RANGE' : 'OUT_OF_RANGE';
+  }
   if (position.confirmedInRange) return 'IN_RANGE';
   if (position.rangeMin === null || position.rangeMax === null) return 'OUT_OF_RANGE';
   const price = prices[position.priceAsset] || 0;
@@ -650,6 +654,9 @@ export function getInvestorSummary(investor, prices) {
   const cscFee = grossProfit * 0.5;
   const netProfit = grossProfit * 0.5;
 
+  const isActive = investor.v3Positions.some((p, i) => v3Statuses[i] === 'IN_RANGE') ||
+                   investor.deltas.some(d => d.status === 'ACTIVO');
+
   let status = 'ACTIVO';
   if (minHF !== null && minHF < 1.5) status = 'CRÍTICO';
   else if (minHF !== null && minHF < 2.0) status = 'VIGILANCIA';
@@ -670,5 +677,6 @@ export function getInvestorSummary(investor, prices) {
     netProfit,
     gasAlert,
     lendingComputed,
+    isActive,
   };
 }
