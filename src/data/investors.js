@@ -1,15 +1,19 @@
 // CSC Dashboard — Investor Data
-// ETH: $2,047 | BNB: $580 | XRP: $1.2994
+// ETH: $2,274 | BNB: $637 | XRP: $1.38 | Última actualización: 2026-05-08
 
 export const PRICES = {
-  ETH: 2047,
-  BNB: 580,
-  XRP: 1.2994,
+  ETH: 2274,
+  BNB: 637,
+  XRP: 1.38,
   USDC: 1,
   USDT: 1,
-  wstETH: 2047 * 1.05,
-  WBNB: 580,
-  lastUpdated: '2026-04-02T20:49:00Z',
+  wstETH: 2813,
+  WBNB: 637,
+  ARB: 7.80,
+  GHO: 1,
+  'USD₮0': 1,
+  WBTC: 79380,
+  lastUpdated: '2026-05-08T12:00:00Z',
 };
 
 // Map token symbol → price from PRICES
@@ -23,6 +27,10 @@ export function getAssetPrice(asset, prices) {
     XRP: prices.XRP,
     USDC: 1,
     USDT: 1,
+    GHO: 1,
+    'USD₮0': 1,
+    ARB: prices.ARB,
+    WBTC: prices.WBTC,
   };
   return map[asset] ?? 0;
 }
@@ -48,11 +56,12 @@ export function computeLendingPosition(pos, prices) {
 }
 
 export const investors = [
+  // ── JAVI ──────────────────────────────────────────────────────────────────
   {
     id: 'javi',
     name: 'Javi',
     debankUrl: 'https://debank.com/profile/0xf4adc82dc4e78e1e695762087905308769079146',
-    portfolioTotal: 5007,
+    portfolioTotal: 5964,
     pe: 4000,
     peNote: 'ciclo anterior',
     capitalInicial: null,
@@ -62,18 +71,25 @@ export const investors = [
     aprPrevisto: 25,
     diasRestantes: 30,
 
-    wallet: [],
+    wallet: [
+      { asset: 'ETH',   amount: 0.0214,  valueUSD: 48.83 },
+      { asset: 'WETH',  amount: 0.0107,  valueUSD: 24.50 },
+      { asset: 'BNB',   amount: 0.0307,  valueUSD: 19.64 },
+      { asset: 'USDC',  amount: 17.9109, valueUSD: 17.91 },
+      { asset: 'USD₮0', amount: 0.0639,  valueUSD: 0.06  },
+      { asset: 'MON',   amount: 1,       valueUSD: 0.03  },
+    ],
 
     v3Positions: [
       {
-        id: '#5139243',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
+        id: 'ABRACADABRA-JAVI',
+        pool: 'SPELL Rewards',
+        protocol: 'Abracadabra',
         network: 'Arbitrum',
-        liquidity: 2192,
-        rangeMin: 2951,
-        rangeMax: 4125,
-        rewardsPending: 0,
+        liquidity: 4.43,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 4.43,
         apr: 0,
         fechaApertura: null,
         priceAsset: 'ETH',
@@ -85,46 +101,47 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.8559, valueUSD: 5840, liqThreshold: 0.825 },
+          { asset: 'WETH', amount: 2.8620, valueUSD: 6507, liqThreshold: 0.825 },
         ],
         debt: [
-          { asset: 'USDC', amount: 3292.94, valueUSD: 3293 },
+          { asset: 'USDC', amount: 3308.58, valueUSD: 3309 },
         ],
-        liquidationPriceETH: 1356,
+        liquidationPriceETH: 1401,
       },
       {
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP',  amount: 3028.25, valueUSD: 3933, liqThreshold: 0.65 },
-          { asset: 'USDT', amount: 490.30,  valueUSD: 490,  liqThreshold: 0.75 },
+          { asset: 'XRP',  amount: 3030.03, valueUSD: 4181, liqThreshold: 0.65 },
+          { asset: 'USDT', amount: 491.21,  valueUSD: 491,  liqThreshold: 0.75 },
         ],
         debt: [
-          { asset: 'USDT', amount: 2109.56, valueUSD: 2110 },
+          { asset: 'USDT', amount: 2117.17, valueUSD: 2117 },
         ],
-        liquidationPriceXRP: 0.87,
+        liquidationPriceXRP: 0.89,
       },
       {
         protocol: 'Aave V3',
         network: 'BNB',
         collateral: [
-          { asset: 'WBNB', amount: 0.2008, valueUSD: 116, liqThreshold: 0.80 },
+          { asset: 'WBNB', amount: 0.2008, valueUSD: 128, liqThreshold: 0.75 },
         ],
         debt: [
-          { asset: 'USDT', amount: 76.5, valueUSD: 76.5 },
+          { asset: 'USDT', amount: 76.82, valueUSD: 77 },
         ],
-        liquidationPriceBNB: 473,
+        liquidationPriceBNB: 478,
       },
     ],
 
     deltas: [],
   },
 
+  // ── JOSE ──────────────────────────────────────────────────────────────────
   {
     id: 'jose',
     name: 'José',
     debankUrl: 'https://debank.com/profile/0x25b6afcf82014dc263b6bba28a73d16b0f760ab4',
-    portfolioTotal: 6989,
+    portfolioTotal: 7526,
     pe: 2146,
     capitalInicial: null,
     fechaEntrada: null,
@@ -133,58 +150,52 @@ export const investors = [
     aprPrevisto: 30,
     diasRestantes: 30,
 
-    wallet: [],
-
-    v3Positions: [
-      {
-        id: '#5396295',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
-        network: 'Arbitrum',
-        liquidity: 1359,
-        rangeMin: 1901,
-        rangeMax: 2399,
-        rewardsPending: 0,
-        apr: 30,
-        fechaApertura: null,
-        priceAsset: 'ETH',
-      },
+    wallet: [
+      { asset: 'BNB',  amount: 0.0775, valueUSD: 49.58 },
+      { asset: 'ETH',  amount: 0.0129, valueUSD: 29.44 },
+      { asset: 'USDC', amount: 7.7395, valueUSD: 7.74  },
+      { asset: 'MON',  amount: 1,      valueUSD: 0.03  },
     ],
 
+    v3Positions: [],
+
     lending: [
-      {
-        protocol: 'Venus',
-        network: 'BNB',
-        collateral: [
-          { asset: 'XRP', amount: 4527, valueUSD: 6156, liqThreshold: 0.65 },
-        ],
-        debt: [
-          { asset: 'USDT', amount: 2620, valueUSD: 2620 },
-        ],
-        liquidationPriceXRP: 0.73,
-      },
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH',   amount: 2.02,  valueUSD: 4149, liqThreshold: 0.825 },
-          { asset: 'wstETH', amount: 0.876, valueUSD: 1889, liqThreshold: 0.80  },
+          { asset: 'WETH',   amount: 2.0222, valueUSD: 4598, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 0.8756, valueUSD: 2464, liqThreshold: 0.80  },
+          { asset: 'USDC',   amount: 0.8264, valueUSD: 1,    liqThreshold: 0.87  },
         ],
         debt: [
-          { asset: 'USDC', amount: 3269, valueUSD: 3269 },
+          { asset: 'USDC', amount: 3206.95, valueUSD: 3207 },
+          { asset: 'WETH', amount: 0.0355,  valueUSD: 81   },
         ],
-        liquidationPriceETH: 1285,
+        liquidationPriceETH: 1283,
+      },
+      {
+        protocol: 'Venus',
+        network: 'BNB',
+        collateral: [
+          { asset: 'XRP', amount: 4529.71, valueUSD: 6251, liqThreshold: 0.65 },
+        ],
+        debt: [
+          { asset: 'USDT', amount: 2631.78, valueUSD: 2632 },
+        ],
+        liquidationPriceXRP: 0.89,
       },
     ],
 
     deltas: [],
   },
 
+  // ── BENJY ─────────────────────────────────────────────────────────────────
   {
     id: 'benjy',
     name: 'Benjy',
     debankUrl: 'https://debank.com/profile/0x08e8563776ba62e43ef8fe324ce325bb4452ad0c',
-    portfolioTotal: 5393,
+    portfolioTotal: 5763,
     pe: 2148,
     capitalInicial: null,
     fechaEntrada: null,
@@ -193,71 +204,51 @@ export const investors = [
     aprPrevisto: 25,
     diasRestantes: 30,
 
-    wallet: [],
-
-    v3Positions: [
-      {
-        id: '#BENJY-1',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
-        network: 'Arbitrum',
-        liquidity: 1510,
-        rangeMin: 2951,
-        rangeMax: 4125,
-        rewardsPending: 0,
-        apr: 0,
-        fechaApertura: null,
-        priceAsset: 'ETH',
-        note: 'Liquidez retirada',
-      },
-      {
-        id: '#BENJY-2',
-        pool: 'XRP/USDT',
-        protocol: 'PancakeSwap',
-        network: 'BNB',
-        liquidity: 0,
-        rangeMin: 2.88,
-        rangeMax: 3.61,
-        rewardsPending: 0,
-        apr: 0,
-        fechaApertura: null,
-        priceAsset: 'XRP',
-      },
+    wallet: [
+      { asset: 'ETH',  amount: 0.0140,  valueUSD: 31.92 },
+      { asset: 'BNB',  amount: 0.0398,  valueUSD: 25.44 },
+      { asset: 'XRP',  amount: 17.7226, valueUSD: 24.58 },
+      { asset: 'WETH', amount: 0.0051,  valueUSD: 11.67 },
+      { asset: 'MON',  amount: 1,       valueUSD: 0.03  },
     ],
+
+    v3Positions: [],
 
     lending: [
       {
         protocol: 'Venus',
         network: 'BNB',
         collateral: [
-          { asset: 'XRP', amount: 3711, valueUSD: 5047, liqThreshold: 0.65 },
+          { asset: 'XRP', amount: 3712.97, valueUSD: 5124, liqThreshold: 0.65 },
         ],
         debt: [
-          { asset: 'USDT', amount: 1965, valueUSD: 1965 },
+          { asset: 'USDT', amount: 1973.59, valueUSD: 1974 },
         ],
-        liquidationPriceXRP: 0.70,
+        liquidationPriceXRP: 0.82,
       },
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH', amount: 2.032, valueUSD: 4174, liqThreshold: 0.825 },
+          { asset: 'WETH', amount: 2.0361, valueUSD: 4630, liqThreshold: 0.825 },
+          { asset: 'USDC', amount: 147.20, valueUSD: 147,  liqThreshold: 0.87  },
         ],
         debt: [
-          { asset: 'USDC', amount: 2292, valueUSD: 2292 },
+          { asset: 'USDC', amount: 2301.78, valueUSD: 2302 },
         ],
-        liquidationPriceETH: 1330,
+        liquidationPriceETH: 1294,
       },
     ],
 
     deltas: [],
   },
 
+  // ── IRENE ─────────────────────────────────────────────────────────────────
   {
     id: 'irene',
     name: 'Irene',
     debankUrl: 'https://debank.com/profile/0xed2affb53c1840b82c84240f9f7dda86b02a4f9f',
-    portfolioTotal: 3323,
+    portfolioTotal: 3817,
     pe: 2127,
     capitalInicial: null,
     fechaEntrada: null,
@@ -266,49 +257,40 @@ export const investors = [
     aprPrevisto: 25,
     diasRestantes: 30,
 
-    wallet: [],
-
-    v3Positions: [
-      {
-        id: '#IRENE-1',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
-        network: 'Arbitrum',
-        liquidity: 2409,
-        rangeMin: 2951,
-        rangeMax: 4125,
-        rewardsPending: 0,
-        apr: 0,
-        fechaApertura: null,
-        priceAsset: 'ETH',
-        note: 'Liquidez retirada',
-      },
+    wallet: [
+      { asset: 'ETH',   amount: 0.0215, valueUSD: 49.13 },
+      { asset: 'USD₮0', amount: 0.0489, valueUSD: 0.05  },
     ],
+
+    v3Positions: [],
 
     lending: [
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH',   amount: 2.044, valueUSD: 4198, liqThreshold: 0.825 },
-          { asset: 'wstETH', amount: 0.914, valueUSD: 1970, liqThreshold: 0.80  },
+          { asset: 'WETH',   amount: 2.0482, valueUSD: 4658, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 0.9144, valueUSD: 2572, liqThreshold: 0.80  },
+          { asset: 'USD₮0',  amount: 0.7890, valueUSD: 1,    liqThreshold: 0.75  },
+          { asset: 'GHO',    amount: 0.1838, valueUSD: 0,    liqThreshold: 0.75  },
         ],
         debt: [
-          { asset: 'USDC', amount: 3463, valueUSD: 3463 },
-          { asset: 'WETH', amount: 0,    valueUSD: 0    },
+          { asset: 'USDC', amount: 3434.71, valueUSD: 3435 },
+          { asset: 'WETH', amount: 0.0201,  valueUSD: 46   },
         ],
-        liquidationPriceETH: 1285,
+        liquidationPriceETH: 1334,
       },
     ],
 
     deltas: [],
   },
 
+  // ── ROBERT ────────────────────────────────────────────────────────────────
   {
     id: 'robert',
     name: 'Robert',
     debankUrl: 'https://debank.com/profile/0xca701bc6a3f762c5ecc3da46a04ee32fc6a6ba93',
-    portfolioTotal: 11128,
+    portfolioTotal: 12264,
     pe: 2152,
     capitalInicial: null,
     fechaEntrada: null,
@@ -317,73 +299,37 @@ export const investors = [
     aprPrevisto: 28,
     diasRestantes: 30,
 
-    wallet: [],
-
-    v3Positions: [
-      {
-        id: '#ROBERT-1',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
-        network: 'Arbitrum',
-        liquidity: 3126,
-        rangeMin: 2951,
-        rangeMax: 4125,
-        rewardsPending: 0,
-        apr: 0,
-        fechaApertura: null,
-        priceAsset: 'ETH',
-        note: 'Capital retirado',
-      },
-      {
-        id: '#5025098',
-        pool: 'XRP/USDT',
-        protocol: 'PancakeSwap',
-        network: 'BNB',
-        liquidity: 1987,
-        rangeMin: 1.20,
-        rangeMax: 1.60,
-        rewardsPending: 27.20,
-        apr: 28,
-        fechaApertura: null,
-        priceAsset: 'XRP',
-        xrpAmount: 1440,
-      },
+    wallet: [
+      { asset: 'ETH', amount: 0.0167, valueUSD: 38.04 },
     ],
+
+    v3Positions: [],
 
     lending: [
       {
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH',   amount: 5.064, valueUSD: 10401, liqThreshold: 0.825 },
-          { asset: 'wstETH', amount: 2.578, valueUSD: 5557,  liqThreshold: 0.80  },
+          { asset: 'WETH',   amount: 5.0750, valueUSD: 11541, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 2.5781, valueUSD: 7252,  liqThreshold: 0.80  },
+          { asset: 'USD₮0',  amount: 0.6700, valueUSD: 1,     liqThreshold: 0.75  },
         ],
         debt: [
-          { asset: 'USDC', amount: 8620, valueUSD: 8620 },
+          { asset: 'USDC', amount: 8656.16, valueUSD: 8656 },
         ],
-        liquidationPriceETH: 1300,
-      },
-      {
-        protocol: 'Aave V3',
-        network: 'BNB',
-        collateral: [
-          { asset: 'WBNB', amount: 6.79, valueUSD: 4196, liqThreshold: 0.80 },
-        ],
-        debt: [
-          { asset: 'USDT', amount: 2036, valueUSD: 2036 },
-        ],
-        liquidationPriceBNB: 475,
+        liquidationPriceETH: 1284,
       },
     ],
 
     deltas: [],
   },
 
+  // ── GABI ──────────────────────────────────────────────────────────────────
   {
     id: 'gabi',
     name: 'Gabi',
     debankUrl: 'https://debank.com/profile/0x37080c717bfe37f87f26c7f84afce57ba9a32d17',
-    portfolioTotal: 17951,
+    portfolioTotal: 19699,
     pe: 2152,
     capitalInicial: null,
     fechaEntrada: null,
@@ -392,49 +338,38 @@ export const investors = [
     aprPrevisto: 25,
     diasRestantes: 30,
 
-    wallet: [],
+    wallet: [
+      { asset: 'ETH',  amount: 0.0243,     valueUSD: 55.49 },
+      { asset: 'USDC', amount: 28.4616,    valueUSD: 28.46 },
+      { asset: 'WBTC', amount: 0.00003729, valueUSD: 2.96  },
+    ],
 
     v3Positions: [
       {
-        id: '#GABI-1',
-        pool: 'WETH/USDC',
-        protocol: 'Uniswap V3',
+        id: 'ABRACADABRA-GABI',
+        pool: 'SPELL Rewards',
+        protocol: 'Abracadabra',
         network: 'Arbitrum',
-        liquidity: 3126,
-        rangeMin: 2951,
-        rangeMax: 4125,
-        rewardsPending: 0,
+        liquidity: 0,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 0.01,
         apr: 0,
         fechaApertura: null,
         priceAsset: 'ETH',
-        note: 'Capital retirado',
       },
       {
-        id: '#GABI-2',
-        pool: 'XRP/USDT',
-        protocol: 'PancakeSwap',
-        network: 'BNB',
+        id: 'GMX-GABI',
+        pool: 'GMX Rewards',
+        protocol: 'GMX',
+        network: 'Arbitrum',
         liquidity: 0,
-        rangeMin: 2.39,
-        rangeMax: 3.82,
-        rewardsPending: 0,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 0.01,
         apr: 0,
         fechaApertura: null,
-        priceAsset: 'XRP',
-      },
-      {
-        id: '#GABI-3',
-        pool: 'USDT/WBNB',
-        protocol: 'PancakeSwap',
-        network: 'BNB',
-        liquidity: 0,
-        rangeMin: 550,
-        rangeMax: 700,
-        rewardsPending: 0,
-        apr: 0,
-        fechaApertura: null,
-        priceAsset: 'BNB',
-        note: '253 días parada',
+        priceAsset: 'ETH',
       },
     ],
 
@@ -443,35 +378,26 @@ export const investors = [
         protocol: 'Aave V3',
         network: 'Arbitrum',
         collateral: [
-          { asset: 'WETH',   amount: 8.532, valueUSD: 17526, liqThreshold: 0.825 },
-          { asset: 'wstETH', amount: 2.52,  valueUSD: 5432,  liqThreshold: 0.80  },
+          { asset: 'WETH',   amount: 8.5512,   valueUSD: 19446, liqThreshold: 0.825 },
+          { asset: 'wstETH', amount: 2.5202,   valueUSD: 7092,  liqThreshold: 0.80  },
+          { asset: 'USDC',   amount: 607.5481, valueUSD: 608,   liqThreshold: 0.87  },
+          { asset: 'ARB',    amount: 53.3795,  valueUSD: 416,   liqThreshold: 0.72  },
         ],
         debt: [
-          { asset: 'USDC', amount: 15058, valueUSD: 15058 },
+          { asset: 'USDC', amount: 15131.24, valueUSD: 15131 },
         ],
-        liquidationPriceETH: 1340,
+        liquidationPriceETH: 1498,
       },
       {
-        protocol: 'Aave V3',
-        network: 'BNB',
+        protocol: 'YLDR',
+        network: 'Arbitrum',
+        reportedHF: 1.55,
         collateral: [
-          { asset: 'WBNB', amount: 6.79, valueUSD: 4196, liqThreshold: 0.80 },
+          { asset: 'ARB', amount: 5.8064, valueUSD: 45, liqThreshold: 0.80 },
         ],
         debt: [
-          { asset: 'USDT', amount: 2036, valueUSD: 2036 },
+          { asset: 'USD₮0', amount: 0.3406, valueUSD: 0 },
         ],
-        liquidationPriceBNB: 475,
-      },
-      {
-        protocol: 'Venus',
-        network: 'BNB',
-        collateral: [
-          { asset: 'XRP', amount: 5380, valueUSD: 7317, liqThreshold: 0.65 },
-        ],
-        debt: [
-          { asset: 'USDT', amount: 2386, valueUSD: 2386 },
-        ],
-        liquidationPriceXRP: 0.59,
       },
     ],
 
@@ -483,7 +409,7 @@ export const investors = [
     id: 'carmen',
     name: 'Carmen',
     debankUrl: 'https://debank.com/profile/0x485d68bdabc9d8134c742f82bb7fc10750189255',
-    portfolioTotal: 7730,
+    portfolioTotal: 8571,
     pe: null,
     capitalInicial: null,
     fechaEntrada: null,
@@ -493,11 +419,10 @@ export const investors = [
     diasRestantes: 30,
 
     wallet: [
-      { asset: 'ETH',    amount: 0.0979,   valueUSD: 201.13 },
-      { asset: 'WETH',   amount: 0.0075,   valueUSD: 15.49  },
+      { asset: 'ETH',    amount: 0.0979,   valueUSD: 223.53 },
+      { asset: 'WETH',   amount: 0.0075,   valueUSD: 17.21  },
       { asset: 'USDC',   amount: 0.7867,   valueUSD: 0.79   },
-      { asset: 'MON',    amount: 1.0000,   valueUSD: 0.02   },
-      { asset: 'wstETH', amount: 0.063303, valueUSD: 0.01   },
+      { asset: 'wstETH', amount: 0,        valueUSD: 0.01   },
     ],
 
     v3Positions: [
@@ -506,10 +431,10 @@ export const investors = [
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
         network: 'Arbitrum',
-        liquidity: 5375.58,
+        liquidity: 6017.16,
         rangeMin: 1900.79,
         rangeMax: 2399.49,
-        rewardsPending: 45.69,
+        rewardsPending: 131.04,
         apr: 58.82,
         fechaApertura: '2026-03-16',
         priceAsset: 'ETH',
@@ -519,10 +444,10 @@ export const investors = [
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
         network: 'Arbitrum',
-        liquidity: 2072.63,
+        liquidity: 2240.83,
         rangeMin: 2107.00,
         rangeMax: 3703.35,
-        rewardsPending: 55.76,
+        rewardsPending: 127.64,
         apr: 23.48,
         fechaApertura: '2025-11-06',
         priceAsset: 'ETH',
@@ -532,14 +457,121 @@ export const investors = [
         pool: 'WETH/USDC',
         protocol: 'Uniswap V3',
         network: 'Arbitrum',
-        liquidity: 64.47,
+        liquidity: 71.65,
         rangeMin: null,
         rangeMax: null,
         rewardsPending: 0,
-        apr: 378.89,
+        apr: 0,
         fechaApertura: '2025-09-24',
         priceAsset: 'ETH',
         note: 'Rango pendiente de actualización',
+      },
+    ],
+
+    lending: [],
+
+    deltas: [],
+  },
+
+  // ── MANEL ─────────────────────────────────────────────────────────────────
+  {
+    id: 'manel',
+    name: 'Manel',
+    debankUrl: 'https://debank.com/profile/0x053c5c7137601065ba30c830c02e0c0be9bbfc7b',
+    portfolioTotal: 2921,
+    pe: null,
+    capitalInicial: null,
+    fechaEntrada: null,
+    startDate: null,
+    nsEstimado: 1800,
+    aprPrevisto: 25,
+    diasRestantes: 30,
+
+    wallet: [
+      { asset: 'ETH',  amount: 0.0186, valueUSD: 42.41 },
+      { asset: 'WETH', amount: 0.0026, valueUSD: 5.96  },
+    ],
+
+    v3Positions: [
+      {
+        id: '#5460348',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 1521.93,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 6.17,
+        apr: 0,
+        fechaApertura: null,
+        priceAsset: 'ETH',
+      },
+      {
+        id: '#5447645',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 1350.82,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 29.84,
+        apr: 0,
+        fechaApertura: null,
+        priceAsset: 'ETH',
+      },
+    ],
+
+    lending: [],
+
+    deltas: [],
+  },
+
+  // ── ALBERTO ───────────────────────────────────────────────────────────────
+  {
+    id: 'alberto',
+    name: 'Alberto',
+    debankUrl: 'https://debank.com/profile/0x8d9ee154b3df08f48b56ee74ff9fe73527941c81',
+    portfolioTotal: 14163,
+    pe: null,
+    capitalInicial: null,
+    fechaEntrada: null,
+    startDate: null,
+    nsEstimado: 1800,
+    aprPrevisto: 25,
+    diasRestantes: 30,
+
+    wallet: [
+      { asset: 'wstETH', amount: 0.1399, valueUSD: 393.52 },
+      { asset: 'WETH',   amount: 0.0248, valueUSD: 56.57  },
+      { asset: 'ETH',    amount: 0,      valueUSD: 0.02   },
+    ],
+
+    v3Positions: [
+      {
+        id: '#5136962',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 13201.06,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 13.76,
+        apr: 0,
+        fechaApertura: null,
+        priceAsset: 'ETH',
+      },
+      {
+        id: '#5422017',
+        pool: 'WETH/USDC',
+        protocol: 'Uniswap V3',
+        network: 'Arbitrum',
+        liquidity: 511.64,
+        rangeMin: null,
+        rangeMax: null,
+        rewardsPending: 7.17,
+        apr: 0,
+        fechaApertura: null,
+        priceAsset: 'ETH',
       },
     ],
 
@@ -597,9 +629,11 @@ export function getInvestorSummary(investor, prices) {
   const activeV3 = investor.v3Positions.filter((p, i) => v3Statuses[i] === 'IN_RANGE');
   const totalRewards = investor.v3Positions.reduce((s, p) => s + (p.rewardsPending || 0), 0);
 
-  // Dynamic HF from live prices
+  // Dynamic HF from live prices; use reportedHF override when present
   const lendingComputed = investor.lending.map(l => computeLendingPosition(l, prices));
-  const hfValues = lendingComputed.map(l => l.healthFactor).filter(h => h !== null && isFinite(h));
+  const hfValues = investor.lending.map((l, i) =>
+    l.reportedHF != null ? l.reportedHF : lendingComputed[i].healthFactor
+  ).filter(h => h !== null && isFinite(h));
   const minHF = hfValues.length > 0 ? Math.min(...hfValues) : null;
 
   const activeV3Liquidity = activeV3.reduce((s, p) => s + p.liquidity, 0);
