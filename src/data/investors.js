@@ -501,6 +501,7 @@ export const investors = [
         liquidity: 1521.93,
         rangeMin: null,
         rangeMax: null,
+        confirmedInRange: true,
         rewardsPending: 6.17,
         apr: 0,
         fechaApertura: null,
@@ -514,6 +515,7 @@ export const investors = [
         liquidity: 1350.82,
         rangeMin: null,
         rangeMax: null,
+        confirmedInRange: true,
         rewardsPending: 29.84,
         apr: 0,
         fechaApertura: null,
@@ -555,6 +557,7 @@ export const investors = [
         liquidity: 13201.06,
         rangeMin: null,
         rangeMax: null,
+        confirmedInRange: true,
         rewardsPending: 13.76,
         apr: 0,
         fechaApertura: null,
@@ -568,6 +571,7 @@ export const investors = [
         liquidity: 511.64,
         rangeMin: null,
         rangeMax: null,
+        confirmedInRange: true,
         rewardsPending: 7.17,
         apr: 0,
         fechaApertura: null,
@@ -584,6 +588,7 @@ export const investors = [
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 export function getV3Status(position, prices) {
+  if (position.confirmedInRange) return 'IN_RANGE';
   if (position.rangeMin === null || position.rangeMax === null) return 'OUT_OF_RANGE';
   const price = prices[position.priceAsset] || 0;
   if (price === 0) return 'UNKNOWN';
