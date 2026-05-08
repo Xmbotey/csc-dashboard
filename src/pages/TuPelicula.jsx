@@ -99,14 +99,43 @@ export default function TuPelicula() {
     <div className="h-screen text-white flex flex-col overflow-hidden select-none"
       style={{ background: 'linear-gradient(160deg, #030B1A 0%, #04101F 60%, #020A16 100%)' }}>
 
-      {/* Back */}
-      <button onClick={() => navigate('/simulador')}
-        className="absolute top-3 left-4 flex items-center gap-1 text-white/50 hover:text-white text-sm transition-colors z-20">
-        <ChevronLeft size={15} /> Simulador
-      </button>
+      {/* ── TOP BAR: back (left) + action button (right) ── */}
+      <div className="absolute top-0 left-0 right-0 flex justify-between items-center px-4 pt-3 z-20">
+        <button onClick={() => navigate('/simulador')}
+          className="flex items-center gap-1 text-white/50 hover:text-white text-sm transition-colors">
+          <ChevronLeft size={15} /> Simulador
+        </button>
+        <div>
+          {phase === 'idle' && (
+            <button onClick={play}
+              className="flex items-center gap-2 font-black rounded-xl transition-all active:scale-95"
+              style={{ padding: '8px 22px', fontSize: '0.95rem', background: '#FACC15', color: '#000', boxShadow: '0 0 28px rgba(250,204,21,0.45)' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+              <Play size={17} fill="black" /> INICIAR
+            </button>
+          )}
+          {phase === 'playing' && (
+            <button onClick={reset}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-semibold text-sm text-gray-300 hover:text-white transition-colors"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <RotateCcw size={13} /> Cancelar
+            </button>
+          )}
+          {phase === 'done' && (
+            <button onClick={reset}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-sm text-white transition-colors"
+              style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.15)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.09)'}>
+              <RotateCcw size={13} /> RESET
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* ── HEADER ── */}
-      <div className="text-center pt-4 pb-2 px-4 flex-shrink-0">
+      <div className="text-center pt-12 pb-2 px-4 flex-shrink-0">
         <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-none">
           <span className="text-white">Tu </span>
           <span style={{ color: '#FACC15', textShadow: '0 0 24px rgba(250,204,21,0.4)' }}>Película</span>
@@ -230,6 +259,20 @@ export default function TuPelicula() {
           </div>
         </div>
 
+        {/* BANNER CAPITAL SALVADO — overlay centrado al final de la película */}
+        <div className="absolute bottom-3 left-0 right-0 text-center pointer-events-none transition-all duration-500"
+          style={{ opacity: showFinal && !showSlide ? 1 : 0 }}>
+          {showFinal && !showSlide && (
+            <div style={{ animation: 'fadeInUp 0.8s ease-out both' }}>
+              <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
+              <p className="text-3xl font-black leading-tight"
+                style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
+                +{fmt$(c.capitalSalvado)}
+              </p>
+            </div>
+          )}
+        </div>
+
         {/* FASE 2 — diapositiva */}
         {showSlide && (
           <div className="absolute inset-0 flex flex-col justify-center gap-3 px-5 md:px-10"
@@ -291,46 +334,6 @@ export default function TuPelicula() {
         )}
       </div>
 
-      {/* ── BANNER CAPITAL SALVADO (entre película y diapositiva) ── */}
-      <div className="flex-shrink-0 text-center overflow-hidden transition-all duration-500"
-        style={{ height: showFinal && !showSlide ? 64 : 0, opacity: showFinal && !showSlide ? 1 : 0 }}>
-        <div style={{ animation: showFinal && !showSlide ? 'fadeInUp 0.8s ease-out both' : undefined }}>
-          <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
-          <p className="text-3xl font-black leading-tight"
-            style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
-            +{fmt$(c.capitalSalvado)}
-          </p>
-        </div>
-      </div>
-
-      {/* ── BUTTONS ── */}
-      <div className="flex justify-center gap-4 py-3 flex-shrink-0">
-        {phase === 'idle' && (
-          <button onClick={play}
-            className="flex items-center gap-3 font-black rounded-2xl transition-all active:scale-95"
-            style={{ padding: '13px 48px', fontSize: '1.1rem', background: '#FACC15', color: '#000', boxShadow: '0 0 36px rgba(250,204,21,0.4)' }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
-            <Play size={22} fill="black" /> INICIAR
-          </button>
-        )}
-        {phase === 'playing' && (
-          <button onClick={reset}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-gray-300 hover:text-white transition-colors"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <RotateCcw size={14} /> Cancelar
-          </button>
-        )}
-        {phase === 'done' && (
-          <button onClick={reset}
-            className="flex items-center gap-2.5 rounded-2xl font-bold text-base text-white transition-colors"
-            style={{ padding: '11px 34px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.14)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}>
-            <RotateCcw size={18} /> RESET
-          </button>
-        )}
-      </div>
     </div>
   );
 }
