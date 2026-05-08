@@ -259,20 +259,6 @@ export default function TuPelicula() {
           </div>
         </div>
 
-        {/* BANNER CAPITAL SALVADO — overlay centrado al final de la película */}
-        <div className="absolute bottom-3 left-0 right-0 text-center pointer-events-none transition-all duration-500"
-          style={{ opacity: showFinal && !showSlide ? 1 : 0 }}>
-          {showFinal && !showSlide && (
-            <div style={{ animation: 'fadeInUp 0.8s ease-out both' }}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
-              <p className="text-3xl font-black leading-tight"
-                style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
-                +{fmt$(c.capitalSalvado)}
-              </p>
-            </div>
-          )}
-        </div>
-
         {/* FASE 2 — diapositiva */}
         {showSlide && (
           <div className="absolute inset-0 flex flex-col justify-center gap-3 px-5 md:px-10"
@@ -332,6 +318,18 @@ export default function TuPelicula() {
 
           </div>
         )}
+      </div>
+
+      {/* ── BANNER CAPITAL SALVADO ── */}
+      <div className="flex-shrink-0 text-center overflow-hidden transition-all duration-500"
+        style={{ height: showFinal && !showSlide ? 68 : 0, opacity: showFinal && !showSlide ? 1 : 0, paddingBottom: showFinal && !showSlide ? 8 : 0 }}>
+        <div style={{ animation: showFinal && !showSlide ? 'fadeInUp 0.8s ease-out both' : undefined }}>
+          <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
+          <p className="text-3xl font-black leading-tight"
+            style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
+            +{fmt$(c.capitalSalvado)}
+          </p>
+        </div>
       </div>
 
     </div>
