@@ -162,8 +162,11 @@ export default function TuPelicula() {
       <div className="flex-1 relative min-h-0">
 
         {/* FASE 1 — barras */}
-        <div className="absolute inset-0 flex justify-center items-start gap-5 md:gap-12 px-4 md:px-10 pt-2 transition-opacity duration-700"
+        <div className="absolute inset-0 flex flex-col transition-opacity duration-700"
           style={{ opacity: showSlide ? 0 : 1, pointerEvents: showSlide ? 'none' : 'auto' }}>
+
+          {/* fila de barras */}
+          <div className="flex-1 flex justify-center items-start gap-5 md:gap-12 px-4 md:px-10 pt-2 min-h-0">
 
           {/* HOLDER */}
           <div className="flex flex-col items-center gap-1.5 flex-1 max-w-[170px]"
@@ -192,18 +195,6 @@ export default function TuPelicula() {
               </div>
             ) : <div style={{ height: 46 }} />}
           </div>
-
-          {/* BANNER CAPITAL SALVADO — dentro de Phase 1, flota sobre las barras */}
-          {showFinal && !showSlide && (
-            <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none"
-              style={{ zIndex: 30, animation: 'fadeInUp 0.8s ease-out both' }}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
-              <p className="text-3xl font-black leading-tight"
-                style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
-                +{fmt$(c.capitalSalvado)}
-              </p>
-            </div>
-          )}
 
           {/* VS */}
           <div className="flex flex-col items-center justify-start pt-8 gap-1.5 flex-shrink-0">
@@ -269,7 +260,22 @@ export default function TuPelicula() {
               </div>
             ) : <div style={{ height: 46 }} />}
           </div>
-        </div>
+
+          </div>{/* fin fila de barras */}
+
+          {/* BANNER CAPITAL SALVADO — pegado justo debajo de las cajas */}
+          {showFinal && !showSlide && (
+            <div className="flex-shrink-0 text-center py-2"
+              style={{ animation: 'fadeInUp 0.8s ease-out both' }}>
+              <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
+              <p className="text-3xl font-black leading-tight"
+                style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
+                +{fmt$(c.capitalSalvado)}
+              </p>
+            </div>
+          )}
+
+        </div>{/* fin FASE 1 */}
 
         {/* FASE 2 — diapositiva */}
         {showSlide && (
