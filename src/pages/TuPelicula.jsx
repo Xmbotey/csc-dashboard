@@ -53,7 +53,7 @@ export default function TuPelicula() {
     });
     timers.current.push(
       setTimeout(() => setShowFinal(true), FALL_MS + 700),
-      setTimeout(() => { setShowSlide(true); setPhase('done'); }, FALL_MS + 2200),
+      setTimeout(() => { setShowSlide(true); setPhase('done'); }, FALL_MS + 7000),
     );
   }
 
@@ -244,14 +244,14 @@ export default function TuPelicula() {
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-2xl px-4 py-3 text-center"
                 style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">El Holder · en el suelo</p>
+                <p className="text-xs text-gray-300 uppercase tracking-wide mb-1">El Holder · en el suelo</p>
                 <p className="text-2xl md:text-3xl font-black text-red-400">{fmt$(c.sinEstrategia)}</p>
                 <p className="text-red-500 font-bold text-sm">{fmtPct(holderVariacion)}</p>
-                <p className="text-gray-600 text-xs mt-1">de su capital inicial</p>
+                <p className="text-gray-300 text-xs mt-1">de su capital inicial</p>
               </div>
               <div className="rounded-2xl px-4 py-3 text-center"
                 style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}>
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Estrategia CSC · en el suelo</p>
+                <p className="text-xs text-gray-300 uppercase tracking-wide mb-1">Estrategia CSC · en el suelo</p>
                 <p className="text-2xl md:text-3xl font-black" style={{ color: '#60A5FA' }}>{fmt$(c.capitalFinal)}</p>
                 <p className="font-bold text-sm" style={{ color: '#34D399' }}>{fmtPct(c.variacion)}</p>
                 <p className="text-gray-600 text-xs mt-1">+{fmt$(c.capitalSalvado)} generados en la caída</p>
@@ -272,25 +272,25 @@ export default function TuPelicula() {
 
             {/* Recuperación */}
             <div>
-              <p className="text-center text-xs text-gray-600 uppercase tracking-widest mb-3">
+              <p className="text-center text-xs text-gray-200 uppercase tracking-widest mb-3">
                 Si ambos se quedan quietos y ETH vuelve a {fmt$(pe)}…
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-2xl px-4 py-3 text-center"
                   style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)' }}>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">El Holder</p>
+                  <p className="text-xs text-gray-300 uppercase tracking-wide mb-1">El Holder</p>
                   <p className="text-xl md:text-2xl font-black text-gray-300">{fmt$(io)}</p>
-                  <p className="text-gray-500 text-xs mt-1">Recupera lo que tenía.</p>
-                  <p className="text-gray-600 text-xs">Ni un dólar más.</p>
+                  <p className="text-gray-200 text-xs mt-1">Recupera lo que tenía.</p>
+                  <p className="text-gray-200 text-xs">Ni un dólar más.</p>
                 </div>
                 <div className="rounded-2xl px-4 py-3 text-center"
                   style={{ background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.2)' }}>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Inversor CSC · sin hacer nada más</p>
+                  <p className="text-xs text-gray-300 uppercase tracking-wide mb-1">Inversor CSC · sin hacer nada más</p>
                   <p className="text-xl md:text-2xl font-black" style={{ color: '#FACC15' }}>{fmt$(recoveryCSC)}</p>
                   <p className="text-xs font-bold mt-1" style={{ color: '#FACC15' }}>
                     +{fmt$(recoveryExtra)} · +{recoveryExtraPct.toFixed(0)}% más capital
                   </p>
-                  <p className="text-gray-500 text-xs mt-0.5">La caída trabajó para él.</p>
+                  <p className="text-white text-xs mt-0.5 font-semibold">La caída trabajó para él.</p>
                 </div>
               </div>
             </div>
