@@ -71,9 +71,9 @@ export default function TotalesCSC() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <h3 className="font-semibold text-[#1E2A6E] mb-4 text-sm uppercase tracking-wide">Comisiones proyectadas por inversor</h3>
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={barData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+            <BarChart data={barData} margin={{ top: 5, right: 10, left: 10, bottom: 45 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, angle: -45, textAnchor: 'end', dy: 4 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `$${v}`} />
               <Tooltip formatter={v => formatUSD(v)} />
               <Bar dataKey="comision" name="Comisión CSC" fill="#1E2A6E" radius={[4, 4, 0, 0]} />
