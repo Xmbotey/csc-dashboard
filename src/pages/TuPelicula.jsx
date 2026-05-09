@@ -143,21 +143,28 @@ export default function TuPelicula() {
             <span className="text-white"> · {nombre.trim()}</span>
           )}
         </h1>
-        <div className="flex flex-wrap justify-center gap-1.5 mt-2 text-xs">
-          {[{ label: 'Entrada', val: fmt$(pe) }, { label: 'Capital', val: fmt$(io) }, { label: 'Suelo', val: fmt$(ns) }].map(chip => (
-            <span key={chip.label} className="px-2.5 py-1 rounded-full font-medium"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#D1D5DB' }}>
-              {chip.label}: <strong className="text-white">{chip.val}</strong>
-            </span>
+        <div className="flex flex-wrap justify-center gap-1.5 mt-2">
+          {[
+            { label: 'Tu entras al mercado cuando ETH vale:', val: fmt$(pe) },
+            { label: 'Tu capital inicial para iniciar tu camino:', val: fmt$(io) },
+            { label: 'Suponemos una caída del precio de ETH a:', val: fmt$(ns) },
+          ].map(chip => (
+            <div key={chip.label} className="flex flex-col items-center px-2.5 py-1.5 rounded-xl"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <span style={{ fontSize: '9px', color: '#9CA3AF', lineHeight: 1.3 }}>{chip.label}</span>
+              <span className="text-white font-bold" style={{ fontSize: '11px' }}>{chip.val}</span>
+            </div>
           ))}
-          <span className="px-2.5 py-1 rounded-full font-bold"
-            style={{ background: 'rgba(127,29,29,0.5)', border: '1px solid rgba(239,68,68,0.35)', color: '#FCA5A5' }}>
-            Caída: <strong>–{caida.toFixed(0)}%</strong>
-          </span>
-          <span className="px-2.5 py-1 rounded-full font-medium"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#D1D5DB' }}>
-            {dias}d
-          </span>
+          <div className="flex flex-col items-center px-2.5 py-1.5 rounded-xl"
+            style={{ background: 'rgba(127,29,29,0.5)', border: '1px solid rgba(239,68,68,0.35)' }}>
+            <span style={{ fontSize: '9px', color: '#FCA5A5', lineHeight: 1.3 }}>Esto supone una reducción del:</span>
+            <span className="font-bold text-red-300" style={{ fontSize: '11px' }}>–{caida.toFixed(0)}%</span>
+          </div>
+          <div className="flex flex-col items-center px-2.5 py-1.5 rounded-xl"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <span style={{ fontSize: '9px', color: '#9CA3AF', lineHeight: 1.3 }}>Días previstos de la caída:</span>
+            <span className="text-white font-bold" style={{ fontSize: '11px' }}>{dias}d</span>
+          </div>
         </div>
       </div>
 
