@@ -48,7 +48,7 @@ export default function TotalesCSC() {
       {/* Main KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
         <KpiCard label="Liquidez total" value={formatUSD(totalAUM)} color="blue" />
-        <KpiCard label="Inversores Activos" value={investors.length.toString()} color="blue" />
+        <KpiCard label="Total inversores en CSC" value={investors.length.toString()} color="blue" />
         <KpiCard label="Total V3 Liquidez" value={formatUSD(totalV3Liq)} color="blue" />
         <KpiCard label="Total Colateral" value={formatUSD(totalCollateral)} color="green" />
         <KpiCard label="Total Deuda" value={formatUSD(totalDebt)} color="red" />
