@@ -53,7 +53,7 @@ export default function TuPelicula() {
     });
     timers.current.push(
       setTimeout(() => setShowFinal(true), FALL_MS + 700),
-      setTimeout(() => { setShowSlide(true); setPhase('done'); }, FALL_MS + 7000),
+      setTimeout(() => { setShowSlide(true); setPhase('done'); }, FALL_MS + 15000),
     );
   }
 
@@ -82,7 +82,7 @@ export default function TuPelicula() {
     );
   }
 
-  const { pe, io, ns, dias, comision } = simParams;
+  const { pe, io, ns, dias, comision, nombre } = simParams;
   const caida = ((pe - ns) / pe) * 100;
   const holderFinalH = (ns / pe) * BAR_H;
   const cscFinalH = Math.min((c.capitalFinal / io) * BAR_H, BAR_H);
@@ -139,6 +139,9 @@ export default function TuPelicula() {
         <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-none">
           <span className="text-white">Tu </span>
           <span style={{ color: '#FACC15', textShadow: '0 0 24px rgba(250,204,21,0.4)' }}>Película</span>
+          {nombre?.trim() && (
+            <span className="text-white"> · {nombre.trim()}</span>
+          )}
         </h1>
         <div className="flex flex-wrap justify-center gap-1.5 mt-2 text-xs">
           {[{ label: 'Entrada', val: fmt$(pe) }, { label: 'Capital', val: fmt$(io) }, { label: 'Suelo', val: fmt$(ns) }].map(chip => (
@@ -263,19 +266,22 @@ export default function TuPelicula() {
 
           </div>{/* fin fila de barras */}
 
-          {/* BANNER CAPITAL SALVADO — pegado justo debajo de las cajas */}
-          {showFinal && !showSlide && (
-            <div className="flex-shrink-0 text-center py-2"
-              style={{ animation: 'fadeInUp 0.8s ease-out both' }}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest">La estrategia CSC salvó</p>
-              <p className="text-3xl font-black leading-tight"
-                style={{ color: '#4ADE80', textShadow: '0 0 30px rgba(74,222,128,0.45)' }}>
+        </div>{/* fin FASE 1 */}
+
+        {/* BANNER CAPITAL SALVADO — centrado en pantalla, sobre todo */}
+        {showFinal && !showSlide && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ zIndex: 50 }}>
+            <div className="text-center px-6 py-4 rounded-2xl"
+              style={{ background: 'rgba(3,11,26,0.75)', backdropFilter: 'blur(8px)', border: '1px solid rgba(74,222,128,0.25)', animation: 'fadeInUp 0.8s ease-out both' }}>
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">La estrategia CSC salvó</p>
+              <p className="text-4xl font-black leading-tight"
+                style={{ color: '#4ADE80', textShadow: '0 0 40px rgba(74,222,128,0.6)' }}>
                 +{fmt$(c.capitalSalvado)}
               </p>
             </div>
-          )}
-
-        </div>{/* fin FASE 1 */}
+          </div>
+        )}
 
         {/* FASE 2 — diapositiva */}
         {showSlide && (

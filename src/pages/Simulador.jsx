@@ -57,6 +57,7 @@ export default function Simulador() {
   const { simParams: params, setSimParams } = useApp();
 
   const handleChange = (field, val) => {
+    if (field === 'nombre') { setSimParams((prev) => ({ ...prev, nombre: val })); return; }
     const parsed = parseFloat(val);
     setSimParams((prev) => ({ ...prev, [field]: isNaN(parsed) ? prev[field] : parsed }));
   };
@@ -92,6 +93,17 @@ export default function Simulador() {
               <InputField label="Duración estimada (días)" field="dias" value={params.dias} onChange={handleChange} step={1} />
               <InputField label="LTV Aave (%)" field="ltv" value={params.ltv} onChange={handleChange} step={1} suffix="%" />
               <InputField label="Comisión CSC (%)" field="comision" value={params.comision} onChange={handleChange} step={5} suffix="%" />
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Nombre del inversor</label>
+                <input
+                  type="text"
+                  value={params.nombre ?? ''}
+                  onChange={(e) => handleChange('nombre', e.target.value)}
+                  placeholder="Ej. Carlos"
+                  className="w-full border border-gray-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E2A6E] focus:border-transparent"
+                  style={{ backgroundColor: '#FFF9C4' }}
+                />
+              </div>
             </div>
             <button
               onClick={reset}

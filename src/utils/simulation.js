@@ -6,6 +6,7 @@ export const SIM_DEFAULTS = {
   dias: 30,
   ltv: 70,
   comision: 50,
+  nombre: '',
 };
 
 export function computeSimulation(params) {
