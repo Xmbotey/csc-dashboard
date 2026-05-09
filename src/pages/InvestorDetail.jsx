@@ -118,7 +118,7 @@ function TabResumen({ investor, summary, prices, editing, editData, setEditData 
               )}
             </div>
             <div>
-              <p className="text-xs text-gray-500">PE Actual</p>
+              <p className="text-xs text-gray-500">PE Inicial</p>
               {editing ? (
                 <EditableInput value={editData.pe} onChange={v => setEditData(d => ({ ...d, pe: v }))} />
               ) : (

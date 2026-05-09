@@ -100,7 +100,7 @@ export default function Overview() {
             <tr>
               <Th>Inversor</Th>
               <Th>Portfolio</Th>
-              <Th>PE Actual</Th>
+              <Th>PE Inicial</Th>
               <Th>V3 En Rango</Th>
               <Th>Rewards</Th>
               <Th>HF Mínimo</Th>

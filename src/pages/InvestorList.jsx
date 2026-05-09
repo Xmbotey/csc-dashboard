@@ -103,7 +103,7 @@ export default function InvestorList() {
               {/* Stats grid */}
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="bg-[#D6E4F7] rounded-lg p-3">
-                  <p className="text-xs text-[#1E2A6E] opacity-70 uppercase tracking-wide">PE Actual</p>
+                  <p className="text-xs text-[#1E2A6E] opacity-70 uppercase tracking-wide">PE Inicial</p>
                   <p className="font-bold text-[#1E2A6E]">{formatUSD(investor.pe)}</p>
                 </div>
                 <div className="bg-[#D6F0DC] rounded-lg p-3">
