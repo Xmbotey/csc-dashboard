@@ -382,7 +382,7 @@ export default function DatosActuales() {
       cy += 15;
 
       const coverStats = [
-        { label: 'Portfolio Total AUM', value: fmt(allTotals.portfolio) },
+        { label: 'Liquidez total', value: fmt(allTotals.portfolio) },
         { label: 'Rewards Pendientes', value: fmt(allTotals.rewards) },
         { label: 'Liquidez V3 Total', value: fmt(allTotals.liquidity) },
         { label: 'Inversores', value: investors.length.toString() },

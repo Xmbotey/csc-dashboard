@@ -44,7 +44,7 @@ export default function TotalesCSC() {
 
       {/* Main KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
-        <KpiCard label="AUM Total" value={formatUSD(totalAUM)} color="blue" />
+        <KpiCard label="Liquidez total" value={formatUSD(totalAUM)} color="blue" />
         <KpiCard label="Inversores Activos" value={investors.length.toString()} color="blue" />
         <KpiCard label="Total V3 Liquidez" value={formatUSD(totalV3Liq)} color="blue" />
         <KpiCard label="Total Colateral" value={formatUSD(totalCollateral)} color="green" />
@@ -83,7 +83,7 @@ export default function TotalesCSC() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <h3 className="font-semibold text-[#1E2A6E] mb-4 text-sm uppercase tracking-wide">Distribución AUM por inversor</h3>
+          <h3 className="font-semibold text-[#1E2A6E] mb-4 text-sm uppercase tracking-wide">Distribución de liquidez por inversor</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
