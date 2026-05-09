@@ -165,11 +165,11 @@ export default function TuPelicula() {
       <div className="flex-1 relative min-h-0">
 
         {/* FASE 1 — barras */}
-        <div className="absolute inset-0 flex flex-col transition-opacity duration-700"
+        <div className="absolute inset-0 flex flex-col items-center pt-2 transition-opacity duration-700"
           style={{ opacity: showSlide ? 0 : 1, pointerEvents: showSlide ? 'none' : 'auto' }}>
 
           {/* fila de barras */}
-          <div className="flex-1 flex justify-center items-start gap-5 md:gap-12 px-4 md:px-10 pt-2 min-h-0">
+          <div className="flex justify-center items-start gap-5 md:gap-12 px-4 md:px-10 w-full">
 
           {/* HOLDER */}
           <div className="flex flex-col items-center gap-1.5 flex-1 max-w-[170px]"
@@ -266,22 +266,27 @@ export default function TuPelicula() {
 
           </div>{/* fin fila de barras */}
 
-        </div>{/* fin FASE 1 */}
-
-        {/* BANNER CAPITAL SALVADO — centrado en pantalla, sobre todo */}
-        {showFinal && !showSlide && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ zIndex: 50 }}>
-            <div className="text-center px-6 py-4 rounded-2xl"
-              style={{ background: 'rgba(3,11,26,0.75)', backdropFilter: 'blur(8px)', border: '1px solid rgba(74,222,128,0.25)', animation: 'fadeInUp 0.8s ease-out both' }}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">La estrategia CSC salvó</p>
+          {/* BANNER CAPITAL SALVADO — flujo natural, justo debajo de las barras */}
+          {showFinal && !showSlide && (
+            <div className="mt-4 text-center px-7 py-3 rounded-2xl"
+              style={{ background: 'rgba(3,11,26,0.85)', backdropFilter: 'blur(8px)', border: '1px solid rgba(74,222,128,0.3)', animation: 'fadeInUp 0.8s ease-out both' }}>
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-0.5">La estrategia CSC salvó</p>
               <p className="text-4xl font-black leading-tight"
                 style={{ color: '#4ADE80', textShadow: '0 0 40px rgba(74,222,128,0.6)' }}>
                 +{fmt$(c.capitalSalvado)}
               </p>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* ¿TE LO EXPLICO? */}
+          {showFinal && !showSlide && (
+            <p className="text-white font-semibold text-sm mt-3"
+              style={{ opacity: 0.75, animation: 'fadeInUp 1.2s ease-out both' }}>
+              ¿Te lo explico? →
+            </p>
+          )}
+
+        </div>{/* fin FASE 1 */}
 
         {/* FASE 2 — diapositiva */}
         {showSlide && (
