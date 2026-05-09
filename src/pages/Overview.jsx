@@ -66,7 +66,7 @@ export default function Overview() {
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4 text-center">
           <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Liquidez Total CSC</p>
           <p className="text-2xl font-bold text-[#1E2A6E]">{formatUSD(totalCSC)}</p>
-          <p className="text-xs text-gray-400 mt-1">AUM consolidado</p>
+          <p className="text-xs text-gray-400 mt-1">Liquidez total consolidada</p>
         </div>
         <div className="bg-green-50 rounded-xl border border-green-200 shadow-sm px-5 py-4 text-center">
           <p className="text-xs text-green-600 uppercase tracking-wide font-semibold mb-1">Liquidez Activa</p>
